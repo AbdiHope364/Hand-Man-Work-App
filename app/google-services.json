@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "220423501478",
+    "project_id": "hand-man-work-41c9f",
+    "storage_bucket": "hand-man-work-41c9f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220423501478:android:34a763890ec28de295e667",
+        "android_client_info": {
+          "package_name": "com.example.hand_man_work"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220423501478-ibulccsu6mqnr64d03tmt7lq6l84jcdv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOEHuY1BXF94FfecV8RJqNxki5UeBanf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220423501478-ibulccsu6mqnr64d03tmt7lq6l84jcdv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
