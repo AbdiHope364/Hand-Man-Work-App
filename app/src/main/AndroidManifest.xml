@@ -17,12 +17,20 @@
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserTypeSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CustomerDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HandymanDashboardActivity"
             android:exported="false" />
     </application>
 

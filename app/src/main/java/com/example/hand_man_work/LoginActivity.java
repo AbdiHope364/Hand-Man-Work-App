@@ -6,32 +6,18 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 
 import com.example.hand_man_work.databinding.ActivityLoginBinding;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
     private FirebaseAuth mAuth;
-    private GoogleSignInClient mGoogleSignInClient;
-    private ActivityResultLauncher<Intent> mGoogleSignInLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,122 +28,78 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        // 1. Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        // 2. Register the ActivityResultLauncher for Google Sign-In
-        mGoogleSignInLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-                        try {
-                            // Google Sign In was successful, authenticate with Firebase
-                            GoogleSignInAccount account = task.getResult(ApiException.class);
-                            if (account != null) {
-                                firebaseAuthWithGoogle(account.getIdToken());
-                            }
-                        } catch (ApiException e) {
-                            // Google Sign In failed
-                            Toast.makeText(LoginActivity.this, "Google sign in failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-        // 3. Set up UI listeners
         binding.loginButton.setOnClickListener(v -> loginUser());
-        binding.signUpText.setOnClickListener(v -> signUpUser());
-        binding.googleSignInButton.setOnClickListener(v -> signInWithGoogle());
-        binding.forgotPasswordText.setOnClickListener(v -> sendPasswordReset());
+        binding.signUpText.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        });
+
+        // The rest of the buttons from the old layout are not in the new requirements
+        // binding.forgotPasswordText.setOnClickListener(v -> sendPasswordReset());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // If user is already logged in, redirect them
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            updateUI(currentUser);
+            redirectUserBasedOnType(currentUser);
         }
-    }
-
-    private void signInWithGoogle() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        mGoogleSignInLauncher.launch(signInIntent);
-    }
-
-    private void firebaseAuthWithGoogle(String idToken) {
-        showProgressBar();
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    hideProgressBar();
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user);
-                    } else {
-                        // Sign in fails, display a message
-                        Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     private void loginUser() {
         String email = binding.emailEditText.getText().toString().trim();
         String password = binding.passwordEditText.getText().toString().trim();
 
-        if (!isEmailValid(email) | !isPasswordValid(password)) {
-            return;
-        }
-
-        performFirebaseAuth(mAuth.signInWithEmailAndPassword(email, password));
-    }
-
-    private void signUpUser() {
-        String email = binding.emailEditText.getText().toString().trim();
-        String password = binding.passwordEditText.getText().toString().trim();
-
-        if (!isEmailValid(email) | !isPasswordValid(password)) {
-            return;
-        }
-
-        performFirebaseAuth(mAuth.createUserWithEmailAndPassword(email, password));
-    }
-
-    private void performFirebaseAuth(Task<AuthResult> task) {
-        showProgressBar();
-        task.addOnCompleteListener(this, authTask -> {
-            hideProgressBar();
-            if (authTask.isSuccessful()) {
-                updateUI(mAuth.getCurrentUser());
-            } else {
-                Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-    private void sendPasswordReset() {
-        String email = binding.emailEditText.getText().toString().trim();
-        if (!isEmailValid(email)) {
+        if (!isEmailValid(email) || !isPasswordValid(password)) {
             return;
         }
 
         showProgressBar();
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
                     hideProgressBar();
                     if (task.isSuccessful()) {
-                        Toast.makeText(LoginActivity.this, "Password reset email sent.", Toast.LENGTH_SHORT).show();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        redirectUserBasedOnType(user);
                     } else {
-                        Toast.makeText(LoginActivity.this, "Failed to send reset email.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void redirectUserBasedOnType(FirebaseUser user) {
+        if (user == null) return;
+
+        showProgressBar();
+        FirestoreHelper.getUserType(user, task -> {
+            hideProgressBar();
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+                    String userType = document.getString("type");
+                    Intent intent;
+                    if ("customer".equals(userType)) {
+                        intent = new Intent(LoginActivity.this, CustomerDashboardActivity.class);
+                    } else if ("worker".equals(userType)) {
+                        intent = new Intent(LoginActivity.this, HandymanDashboardActivity.class);
+                    } else {
+                        // Handle unknown user type, maybe default to customer or show error
+                        intent = new Intent(LoginActivity.this, CustomerDashboardActivity.class);
+                        Toast.makeText(this, "Unknown user type, defaulting to customer.", Toast.LENGTH_SHORT).show();
+                    }
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // This can happen if a user is authenticated but has no Firestore document.
+                    // You might want to log them out or send them to the type selection screen.
+                    Toast.makeText(this, "User profile not found.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Failed to retrieve user data.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private boolean isEmailValid(String email) {
@@ -178,15 +120,6 @@ public class LoginActivity extends AppCompatActivity {
             binding.passwordLayout.setError(null);
             return true;
         }
-    }
-
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        } 
     }
 
     private void showProgressBar() {
