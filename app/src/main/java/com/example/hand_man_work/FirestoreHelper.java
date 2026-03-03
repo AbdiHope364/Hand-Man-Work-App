@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FieldValue;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FirestoreHelper {
@@ -31,6 +32,42 @@ public class FirestoreHelper {
         db.collection(COLLECTION_USERS)
                 .document(user.getUid())
                 .set(userProfile)
+                .addOnCompleteListener(listener);
+    }
+
+    public static void getUserData(String userId, OnCompleteListener<DocumentSnapshot> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(COLLECTION_USERS)
+                .document(userId)
+                .get()
+                .addOnCompleteListener(listener);
+    }
+
+    public static void updateCustomerProfile(String userId, String name, String phone, String address, OnCompleteListener<Void> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("name", name);
+        updates.put("phone", phone);
+        updates.put("address", address);
+
+        db.collection(COLLECTION_USERS)
+                .document(userId)
+                .update(updates)
+                .addOnCompleteListener(listener);
+    }
+
+    public static void updateWorkerProfile(String userId, String name, String phone, List<String> skills, double hourlyRate, String photoUrl, OnCompleteListener<Void> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("name", name);
+        updates.put("phone", phone);
+        updates.put("skills", skills);
+        updates.put("hourlyRate", hourlyRate);
+        updates.put("photoUrl", photoUrl);
+
+        db.collection(COLLECTION_USERS)
+                .document(userId)
+                .update(updates)
                 .addOnCompleteListener(listener);
     }
 
