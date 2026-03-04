@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +69,14 @@ public class FirestoreHelper {
         db.collection(COLLECTION_USERS)
                 .document(userId)
                 .update(updates)
+                .addOnCompleteListener(listener);
+    }
+
+    public static void getWorkers(OnCompleteListener<QuerySnapshot> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(COLLECTION_USERS)
+                .whereEqualTo("type", "worker")
+                .get()
                 .addOnCompleteListener(listener);
     }
 

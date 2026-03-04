@@ -32,6 +32,15 @@
         <activity
             android:name=".HandymanDashboardActivity"
             android:exported="false" />
+        <activity
+            android:name=".CustomerProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WorkerProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CustomerHomeActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
