@@ -14,6 +14,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+/**
+ * Updated LoginActivity to handle the new UI layout.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
@@ -29,12 +32,24 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         binding.loginButton.setOnClickListener(v -> loginUser());
+        
         binding.signUpText.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
 
-        // The rest of the buttons from the old layout are not in the new requirements
-        // binding.forgotPasswordText.setOnClickListener(v -> sendPasswordReset());
+        binding.forgotPasswordText.setOnClickListener(v -> {
+            String email = binding.emailEditText.getText().toString().trim();
+            if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                binding.emailLayout.setError("Enter your registered email to reset password");
+                return;
+            }
+            binding.emailLayout.setError(null);
+            sendPasswordReset(email);
+        });
+
+        binding.googleSignInButton.setOnClickListener(v -> {
+            Toast.makeText(this, "Google Sign-In coming soon", Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -55,15 +70,29 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        showProgressBar();
+        showLoading(true);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
-                    hideProgressBar();
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         redirectUserBasedOnType(user);
                     } else {
-                        Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        showLoading(false);
+                        String error = task.getException() != null ? task.getException().getMessage() : "Authentication failed.";
+                        Toast.makeText(LoginActivity.this, error, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void sendPasswordReset(String email) {
+        showLoading(true);
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    showLoading(false);
+                    if (task.isSuccessful()) {
+                        Toast.makeText(LoginActivity.this, "Password reset email sent.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Failed to send reset email.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -71,9 +100,8 @@ public class LoginActivity extends AppCompatActivity {
     private void redirectUserBasedOnType(FirebaseUser user) {
         if (user == null) return;
 
-        showProgressBar();
+        showLoading(true);
         FirestoreHelper.getUserType(user, task -> {
-            hideProgressBar();
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document != null && document.exists()) {
@@ -84,7 +112,6 @@ public class LoginActivity extends AppCompatActivity {
                     } else if ("worker".equals(userType)) {
                         intent = new Intent(LoginActivity.this, HandymanDashboardActivity.class);
                     } else {
-                        // Handle unknown user type, maybe default to customer or show error
                         intent = new Intent(LoginActivity.this, CustomerDashboardActivity.class);
                         Toast.makeText(this, "Unknown user type, defaulting to customer.", Toast.LENGTH_SHORT).show();
                     }
@@ -92,11 +119,13 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    // This can happen if a user is authenticated but has no Firestore document.
-                    // You might want to log them out or send them to the type selection screen.
-                    Toast.makeText(this, "User profile not found.", Toast.LENGTH_SHORT).show();
+                    showLoading(false);
+                    // Handle case where user exists in Auth but not in Firestore
+                    Toast.makeText(this, "User profile not found. Please register again.", Toast.LENGTH_LONG).show();
+                    mAuth.signOut();
                 }
             } else {
+                showLoading(false);
                 Toast.makeText(this, "Failed to retrieve user data.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -122,11 +151,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void showProgressBar() {
-        binding.progressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgressBar() {
-        binding.progressBar.setVisibility(View.GONE);
+    private void showLoading(boolean isLoading) {
+        binding.progressOverlay.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        binding.loginButton.setEnabled(!isLoading);
     }
 }

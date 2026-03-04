@@ -11,11 +11,12 @@ import com.example.hand_man_work.databinding.ActivityUserTypeSelectionBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Simplified UserTypeSelectionActivity to handle mandatory role selection.
+ */
 public class UserTypeSelectionActivity extends AppCompatActivity {
 
     private ActivityUserTypeSelectionBinding binding;
-    private String name;
-    private String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,48 +24,38 @@ public class UserTypeSelectionActivity extends AppCompatActivity {
         binding = ActivityUserTypeSelectionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Get user details passed from RegisterActivity
-        name = getIntent().getStringExtra("userName");
-        phone = getIntent().getStringExtra("userPhone");
-
-        binding.customerButton.setOnClickListener(v -> saveUserProfile("customer"));
-        binding.workerButton.setOnClickListener(v -> saveUserProfile("worker"));
+        binding.customerButton.setOnClickListener(v -> completeRegistration("customer"));
+        binding.workerButton.setOnClickListener(v -> completeRegistration("worker"));
     }
 
-    private void saveUserProfile(String userType) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser == null) {
-            // Should not happen if registration was successful
-            Toast.makeText(this, "Error: No authenticated user found.", Toast.LENGTH_SHORT).show();
+    private void completeRegistration(String type) {
+        String name = getIntent().getStringExtra("name");
+        String phone = getIntent().getStringExtra("phone");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) {
+            Toast.makeText(this, "Session expired. Please login.", Toast.LENGTH_SHORT).show();
+            finish();
             return;
         }
 
-        showProgressBar();
-
-        FirestoreHelper.createUserProfile(firebaseUser, name, phone, userType, task -> {
-            hideProgressBar();
+        binding.progressBar.setVisibility(View.VISIBLE);
+        FirestoreHelper.saveUser(user, name, phone, type, task -> {
+            binding.progressBar.setVisibility(View.GONE);
             if (task.isSuccessful()) {
-                // Based on user type, redirect to the correct dashboard
+                // Redirect based on type
                 Intent intent;
-                if ("customer".equals(userType)) {
-                    intent = new Intent(UserTypeSelectionActivity.this, CustomerDashboardActivity.class);
+                if ("customer".equals(type)) {
+                    intent = new Intent(this, CustomerDashboardActivity.class);
                 } else {
-                    intent = new Intent(UserTypeSelectionActivity.this, HandymanDashboardActivity.class);
+                    intent = new Intent(this, HandymanDashboardActivity.class);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             } else {
-                Toast.makeText(UserTypeSelectionActivity.this, "Failed to save user profile.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to save profile.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void showProgressBar() {
-        binding.progressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgressBar() {
-        binding.progressBar.setVisibility(View.GONE);
     }
 }

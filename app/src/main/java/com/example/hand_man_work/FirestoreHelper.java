@@ -7,58 +7,70 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A simplified helper class to manage all interactions with Firebase Firestore.
+ */
 public class FirestoreHelper {
 
     private static final String COLLECTION_USERS = "users";
+    private static final String COLLECTION_BOOKINGS = "bookings";
 
-    public static void createUserProfile(FirebaseUser user, String name, String phone, String userType, OnCompleteListener<Void> listener) {
-        if (user == null) {
-            return;
-        }
+    // Saves or updates a user profile
+    public static void saveUser(FirebaseUser user, String name, String phone, String type, OnCompleteListener<Void> listener) {
+        if (user == null) return;
+        
+        Map<String, Object> data = new HashMap<>();
+        data.put("uid", user.getUid());
+        data.put("email", user.getEmail());
+        data.put("name", name);
+        data.put("phone", phone);
+        data.put("type", type);
+        data.put("createdAt", FieldValue.serverTimestamp());
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        Map<String, Object> userProfile = new HashMap<>();
-        userProfile.put("uid", user.getUid());
-        userProfile.put("email", user.getEmail());
-        userProfile.put("name", name);
-        userProfile.put("phone", phone);
-        userProfile.put("type", userType);
-        userProfile.put("createdAt", FieldValue.serverTimestamp());
-
-        db.collection(COLLECTION_USERS)
+        FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
                 .document(user.getUid())
-                .set(userProfile)
+                .set(data)
                 .addOnCompleteListener(listener);
     }
 
-    public static void getUserData(String userId, OnCompleteListener<DocumentSnapshot> listener) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(COLLECTION_USERS)
-                .document(userId)
+    // Fetches user document to check role
+    public static void checkUserType(String uid, OnCompleteListener<DocumentSnapshot> listener) {
+        FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
+                .document(uid)
                 .get()
                 .addOnCompleteListener(listener);
     }
 
+    /**
+     * Helper to get user type. Delegates to checkUserType.
+     */
+    public static void getUserType(FirebaseUser user, OnCompleteListener<DocumentSnapshot> listener) {
+        if (user == null) return;
+        checkUserType(user.getUid(), listener);
+    }
+
+    // --- Phase 2, 3, 4 Methods (Maintained for project integrity) ---
+
+    public static void getUserData(String userId, OnCompleteListener<DocumentSnapshot> listener) {
+        checkUserType(userId, listener);
+    }
+
     public static void updateCustomerProfile(String userId, String name, String phone, String address, OnCompleteListener<Void> listener) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> updates = new HashMap<>();
         updates.put("name", name);
         updates.put("phone", phone);
         updates.put("address", address);
 
-        db.collection(COLLECTION_USERS)
-                .document(userId)
-                .update(updates)
-                .addOnCompleteListener(listener);
+        FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
+                .document(userId).update(updates).addOnCompleteListener(listener);
     }
 
     public static void updateWorkerProfile(String userId, String name, String phone, List<String> skills, double hourlyRate, String photoUrl, OnCompleteListener<Void> listener) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> updates = new HashMap<>();
         updates.put("name", name);
         updates.put("phone", phone);
@@ -66,29 +78,27 @@ public class FirestoreHelper {
         updates.put("hourlyRate", hourlyRate);
         updates.put("photoUrl", photoUrl);
 
-        db.collection(COLLECTION_USERS)
-                .document(userId)
-                .update(updates)
-                .addOnCompleteListener(listener);
+        FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
+                .document(userId).update(updates).addOnCompleteListener(listener);
     }
 
     public static void getWorkers(OnCompleteListener<QuerySnapshot> listener) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(COLLECTION_USERS)
+        FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
                 .whereEqualTo("type", "worker")
-                .get()
-                .addOnCompleteListener(listener);
+                .get().addOnCompleteListener(listener);
     }
 
-    public static void getUserType(FirebaseUser user, OnCompleteListener<DocumentSnapshot> listener) {
-        if (user == null) {
-            return;
-        }
+    public static void createBooking(String customerId, String workerId, Date dateTime, String description, String location, OnCompleteListener<Void> listener) {
+        Map<String, Object> booking = new HashMap<>();
+        booking.put("customerId", customerId);
+        booking.put("workerId", workerId);
+        booking.put("dateTime", dateTime);
+        booking.put("description", description);
+        booking.put("location", location);
+        booking.put("status", "pending");
+        booking.put("createdAt", FieldValue.serverTimestamp());
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(COLLECTION_USERS)
-                .document(user.getUid())
-                .get()
-                .addOnCompleteListener(listener);
+        FirebaseFirestore.getInstance().collection(COLLECTION_BOOKINGS)
+                .document().set(booking).addOnCompleteListener(listener);
     }
 }
