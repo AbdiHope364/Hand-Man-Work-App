@@ -54,18 +54,11 @@ public class FirestoreHelper {
         checkUserType(user.getUid(), listener);
     }
 
-    // --- Phase 2, 3, 4 Methods (Maintained for project integrity) ---
-
     public static void getUserData(String userId, OnCompleteListener<DocumentSnapshot> listener) {
         checkUserType(userId, listener);
     }
 
-    public static void updateCustomerProfile(String userId, String name, String phone, String address, OnCompleteListener<Void> listener) {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("name", name);
-        updates.put("phone", phone);
-        updates.put("address", address);
-
+    public static void updateCustomerProfile(String userId, Map<String, Object> updates, OnCompleteListener<Void> listener) {
         FirebaseFirestore.getInstance().collection(COLLECTION_USERS)
                 .document(userId).update(updates).addOnCompleteListener(listener);
     }

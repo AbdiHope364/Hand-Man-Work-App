@@ -12,7 +12,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class WorkerProfileActivity extends AppCompatActivity {
@@ -32,15 +31,17 @@ public class WorkerProfileActivity extends AppCompatActivity {
             return;
         }
 
+        binding.backButton.setOnClickListener(v -> finish());
+
         loadUserData();
 
         binding.saveButton.setOnClickListener(v -> saveProfile());
     }
 
     private void loadUserData() {
-        showProgressBar();
+        showLoading(true);
         FirestoreHelper.getUserData(userId, task -> {
-            hideProgressBar();
+            showLoading(false);
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document != null && document.exists()) {
@@ -82,9 +83,9 @@ public class WorkerProfileActivity extends AppCompatActivity {
             
             double rate = Double.parseDouble(rateStr);
 
-            showProgressBar();
+            showLoading(true);
             FirestoreHelper.updateWorkerProfile(userId, name, phone, skills, rate, photoUrl, task -> {
-                hideProgressBar();
+                showLoading(false);
                 if (task.isSuccessful()) {
                     Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
                     finish();
@@ -133,11 +134,8 @@ public class WorkerProfileActivity extends AppCompatActivity {
         return isValid;
     }
 
-    private void showProgressBar() {
-        binding.progressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgressBar() {
-        binding.progressBar.setVisibility(View.GONE);
+    private void showLoading(boolean isLoading) {
+        binding.progressOverlay.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        binding.saveButton.setEnabled(!isLoading);
     }
 }

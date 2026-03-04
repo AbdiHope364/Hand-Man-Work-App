@@ -1,88 +1,378 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:fillViewport="true"
+    android:background="@android:color/white"
     tools:context=".CustomerProfileActivity">
 
-    <TextView
-        android:id="@+id/profile_title"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Customer Profile"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:padding="24dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/name_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/profile_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/name_edit_text"
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:contentDescription="Back"
+            android:padding="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="@color/design_default_color_primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Profile Header with Avatar -->
+        <LinearLayout
+            android:id="@+id/avatar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Full Name" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/back_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/phone_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/name_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/phone_edit_text"
-            android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@android:drawable/sym_def_app_icon"
+                android:scaleType="centerCrop"
+                android:background="@color/design_default_color_primary"
+                android:padding="2dp" />
+
+            <Button
+                android:id="@+id/change_photo_button"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Change Photo"
+                android:textColor="@color/design_default_color_primary"
+                android:drawableStart="@android:drawable/ic_menu_camera"
+                android:drawablePadding="4dp" />
+        </LinearLayout>
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/profile_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Phone Number"
-            android:inputType="phone" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="24dp"
+            android:text="Customer Profile"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            app:layout_constraintTop_toBottomOf="@id/avatar_layout"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/address_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/phone_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/address_edit_text"
-            android:layout_width="match_parent"
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/profile_subtitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Address" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="8dp"
+            android:text="Manage your personal information"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintTop_toBottomOf="@id/profile_title"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/save_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Save Profile"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/address_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Profile Completion Progress -->
+        <LinearLayout
+            android:id="@+id/progress_section"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/profile_subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/completion_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile Completion: 0%"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <ProgressBar
+                android:id="@+id/completion_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="4dp"
+                android:max="100"
+                android:progress="0"
+                android:progressTint="@color/design_default_color_primary" />
+        </LinearLayout>
+
+        <!-- Name Field (without icon) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/name_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Full Name *"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            app:layout_constraintTop_toBottomOf="@id/progress_section"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your full name"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:importantForAutofill="yes"
+                android:autofillHints="name" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Phone Field (without icon) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phone_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Phone Number *"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            app:layout_constraintTop_toBottomOf="@id/name_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phone_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your phone number"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:importantForAutofill="yes"
+                android:autofillHints="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Address Field (without icon) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/address_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Address *"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            app:layout_constraintTop_toBottomOf="@id/phone_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/address_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your address"
+                android:maxLines="3"
+                android:gravity="top"
+                android:minHeight="80dp"
+                android:importantForAutofill="yes"
+                android:autofillHints="postalAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Email Field (without icon) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Email Address"
+            app:endIconMode="clear_text"
+            app:helperText="Used for notifications"
+            app:layout_constraintTop_toBottomOf="@id/address_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:importantForAutofill="yes"
+                android:autofillHints="emailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Preferred Contact Method -->
+        <TextView
+            android:id="@+id/contact_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Preferred Contact Method"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/email_layout"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/contact_radio_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/contact_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <RadioButton
+                android:id="@+id/contact_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Phone"
+                android:checked="true"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/contact_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Email"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/contact_both"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Both"
+                android:textSize="14sp" />
+        </RadioGroup>
+
+        <!-- Notification Preferences -->
+        <TextView
+            android:id="@+id/notification_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Notification Preferences"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/contact_radio_group"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/notification_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/notification_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <CheckBox
+                android:id="@+id/notify_booking_updates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Booking updates"
+                android:checked="true"
+                android:textSize="14sp" />
+
+            <CheckBox
+                android:id="@+id/notify_promotions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Promotions and offers"
+                android:checked="false"
+                android:textSize="14sp" />
+
+            <CheckBox
+                android:id="@+id/notify_worker_messages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Messages from workers"
+                android:checked="true"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Default Service Location (without icon) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/default_location_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Default Service Location (Optional)"
+            app:endIconMode="clear_text"
+            app:helperText="Where you usually need services"
+            app:layout_constraintTop_toBottomOf="@id/notification_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/default_location_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. Home, Office, etc."
+                android:maxLines="2" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Save Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/save_button"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp"
+            android:text="Save Profile"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            app:cornerRadius="8dp"
+            app:icon="@android:drawable/ic_menu_save"
+            app:iconGravity="textStart"
+            app:backgroundTint="@color/design_default_color_primary"
+            app:layout_constraintTop_toBottomOf="@id/default_location_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Progress Overlay -->
+        <FrameLayout
+            android:id="@+id/progress_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#4D000000"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/design_default_color_primary" />
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
