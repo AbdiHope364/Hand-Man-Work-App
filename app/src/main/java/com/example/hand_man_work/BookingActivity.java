@@ -16,13 +16,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * Phase 4: Implementation of booking request functionality.
+ */
 public class BookingActivity extends AppCompatActivity {
 
     private ActivityBookingBinding binding;
     private String workerId;
     private String workerName;
     private Calendar selectedDateTime;
-    private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
+    private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +42,15 @@ public class BookingActivity extends AppCompatActivity {
             return;
         }
 
-        binding.workerInfo.setText("Booking with: " + workerName);
+        binding.backButton.setOnClickListener(v -> finish());
+        binding.workerInfoText.setText("Booking with: " + workerName);
+        
         selectedDateTime = Calendar.getInstance();
+        updateDateTimeUI();
 
-        binding.btnSelectDate.setOnClickListener(v -> showDatePicker());
-        binding.btnSelectTime.setOnClickListener(v -> showTimePicker());
-        binding.btnSubmitBooking.setOnClickListener(v -> submitBooking());
+        binding.datePickerButton.setOnClickListener(v -> showDatePicker());
+        binding.timePickerButton.setOnClickListener(v -> showTimePicker());
+        binding.submitBookingButton.setOnClickListener(v -> submitBooking());
     }
 
     private void showDatePicker() {
@@ -75,7 +81,7 @@ public class BookingActivity extends AppCompatActivity {
     }
 
     private void updateDateTimeUI() {
-        binding.tvSelectedDateTime.setText("Scheduled for: " + dateTimeFormat.format(selectedDateTime.getTime()));
+        binding.dateTimeText.setText(dateTimeFormat.format(selectedDateTime.getTime()));
     }
 
     private void submitBooking() {
@@ -102,18 +108,19 @@ public class BookingActivity extends AppCompatActivity {
             return;
         }
 
-        showProgressBar();
+        showLoading(true);
         FirestoreHelper.createBooking(
                 customerId,
                 workerId,
+                workerName,
                 selectedDateTime.getTime(),
                 description,
                 location,
                 task -> {
-                    hideProgressBar();
+                    showLoading(false);
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Booking request sent successfully!", Toast.LENGTH_LONG).show();
-                        // Return to home screen (CustomerHomeActivity)
+                        Toast.makeText(this, "Booking request sent!", Toast.LENGTH_LONG).show();
+                        // Return to home screen
                         Intent intent = new Intent(this, CustomerHomeActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
@@ -125,11 +132,8 @@ public class BookingActivity extends AppCompatActivity {
         );
     }
 
-    private void showProgressBar() {
-        binding.progressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgressBar() {
-        binding.progressBar.setVisibility(View.GONE);
+    private void showLoading(boolean isLoading) {
+        binding.progressOverlay.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        binding.submitBookingButton.setEnabled(!isLoading);
     }
 }

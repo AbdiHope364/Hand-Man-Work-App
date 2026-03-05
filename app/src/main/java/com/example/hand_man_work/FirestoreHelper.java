@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
@@ -81,10 +82,11 @@ public class FirestoreHelper {
                 .get().addOnCompleteListener(listener);
     }
 
-    public static void createBooking(String customerId, String workerId, Date dateTime, String description, String location, OnCompleteListener<Void> listener) {
+    public static void createBooking(String customerId, String workerId, String workerName, Date dateTime, String description, String location, OnCompleteListener<Void> listener) {
         Map<String, Object> booking = new HashMap<>();
         booking.put("customerId", customerId);
         booking.put("workerId", workerId);
+        booking.put("workerName", workerName);
         booking.put("dateTime", dateTime);
         booking.put("description", description);
         booking.put("location", location);
@@ -93,5 +95,29 @@ public class FirestoreHelper {
 
         FirebaseFirestore.getInstance().collection(COLLECTION_BOOKINGS)
                 .document().set(booking).addOnCompleteListener(listener);
+    }
+
+    // Fetch bookings for a worker
+    public static void getWorkerBookings(String workerId, OnCompleteListener<QuerySnapshot> listener) {
+        FirebaseFirestore.getInstance().collection(COLLECTION_BOOKINGS)
+                .whereEqualTo("workerId", workerId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get().addOnCompleteListener(listener);
+    }
+
+    // Fetch bookings for a customer
+    public static void getCustomerBookings(String customerId, OnCompleteListener<QuerySnapshot> listener) {
+        FirebaseFirestore.getInstance().collection(COLLECTION_BOOKINGS)
+                .whereEqualTo("customerId", customerId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get().addOnCompleteListener(listener);
+    }
+
+    // Update booking status
+    public static void updateBookingStatus(String bookingId, String newStatus, OnCompleteListener<Void> listener) {
+        FirebaseFirestore.getInstance().collection(COLLECTION_BOOKINGS)
+                .document(bookingId)
+                .update("status", newStatus)
+                .addOnCompleteListener(listener);
     }
 }
