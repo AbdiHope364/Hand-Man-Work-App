@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".CustomerDashboardActivity">
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="@android:color/white">
 
     <TextView
-        android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome, Customer!"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_find_workers"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        android:text="Customer Dashboard"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="48dp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_find_workers"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
         android:text="Find Workers"
-        app:layout_constraintBottom_toTopOf="@+id/btn_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/welcome_text" />
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:cornerRadius="12dp"
+        app:icon="@android:drawable/ic_menu_search"
+        app:iconGravity="textStart"
+        android:layout_marginBottom="16dp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_profile"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="View Profile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_find_workers" />
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:text="My Profile"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:cornerRadius="12dp"
+        app:icon="@android:drawable/ic_menu_myplaces"
+        app:iconGravity="textStart" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

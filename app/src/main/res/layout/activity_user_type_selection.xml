@@ -4,61 +4,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="24dp"
+    android:background="@android:color/white"
     tools:context=".UserTypeSelectionActivity">
 
     <TextView
-        android:id="@+id/title_text"
+        android:id="@+id/selection_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
         android:text="Choose Your Role"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="64dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/subtitle_text"
+        android:id="@+id/selection_subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Are you looking for help, or are you looking to provide a service?"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Select how you want to use the app"
         android:textSize="16sp"
-        android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@id/title_text"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/selection_title" />
 
-    <Button
-        android:id="@+id/customer_button"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/customerButton"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="I am a Customer"
-        app:layout_constraintBottom_toTopOf="@+id/worker_button"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="64dp"
+        android:text="Customer"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:cornerRadius="12dp"
+        app:icon="@android:drawable/ic_menu_myplaces"
+        app:iconGravity="top"
+        app:iconSize="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/selection_subtitle" />
 
-    <Button
-        android:id="@+id/worker_button"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/workerButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="I am a Handyman"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="120dp"
+        android:layout_marginTop="24dp"
+        android:text="Worker / Handyman"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:cornerRadius="12dp"
+        app:icon="@android:drawable/ic_menu_preferences"
+        app:iconGravity="top"
+        app:iconSize="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="64dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/customerButton" />
 
     <ProgressBar
-        android:id="@+id/progress_bar"
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

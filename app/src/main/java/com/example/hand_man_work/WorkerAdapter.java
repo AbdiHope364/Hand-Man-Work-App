@@ -1,19 +1,20 @@
 package com.example.hand_man_work;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hand_man_work.databinding.ItemWorkerBinding;
+
 import java.util.List;
+import java.util.Locale;
 
 public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerViewHolder> {
 
-    private List<Worker> workerList;
-    private OnWorkerClickListener listener;
+    private final List<Worker> workerList;
+    private final OnWorkerClickListener listener;
 
     public interface OnWorkerClickListener {
         void onWorkerClick(Worker worker);
@@ -27,22 +28,15 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
     @NonNull
     @Override
     public WorkerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_worker, parent, false);
-        return new WorkerViewHolder(view);
+        ItemWorkerBinding binding = ItemWorkerBinding.inflate(
+            LayoutInflater.from(parent.getContext()), parent, false);
+        return new WorkerViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull WorkerViewHolder holder, int position) {
         Worker worker = workerList.get(position);
-        holder.nameText.setText(worker.getName());
-        holder.skillsText.setText("Skills: " + worker.getSkillsString());
-        holder.rateText.setText(String.format("$%.2f/hr", worker.getHourlyRate()));
-
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onWorkerClick(worker);
-            }
-        });
+        holder.bind(worker, listener);
     }
 
     @Override
@@ -50,14 +44,25 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
         return workerList.size();
     }
 
-    public static class WorkerViewHolder extends RecyclerView.ViewHolder {
-        TextView nameText, skillsText, rateText;
+    static class WorkerViewHolder extends RecyclerView.ViewHolder {
+        private final ItemWorkerBinding binding;
 
-        public WorkerViewHolder(@NonNull View itemView) {
-            super(itemView);
-            nameText = itemView.findViewById(R.id.worker_name);
-            skillsText = itemView.findViewById(R.id.worker_skills);
-            rateText = itemView.findViewById(R.id.worker_rate);
+        public WorkerViewHolder(ItemWorkerBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        public void bind(final Worker worker, final OnWorkerClickListener listener) {
+            binding.workerName.setText(worker.getName());
+            binding.workerSkills.setText("Skills: " + worker.getSkillsString());
+            binding.workerRate.setText(String.format(Locale.getDefault(), "$%.2f/hr", worker.getHourlyRate()));
+            
+            // Set click listener on the entire item
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onWorkerClick(worker);
+                }
+            });
         }
     }
 }

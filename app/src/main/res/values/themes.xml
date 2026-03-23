@@ -1,6 +1,38 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.HandManWork" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Base customizations -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme -->
+    <style name="Theme.HandManWork" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand colors -->
+        <item name="colorPrimary">@color/design_default_color_primary</item>
+        <item name="colorPrimaryVariant">@color/design_default_color_primary_variant</item>
+        <item name="colorOnPrimary">@color/white</item>
+        
+        <!-- Secondary brand colors -->
+        <item name="colorSecondary">@color/design_default_color_secondary</item>
+        <item name="colorSecondaryVariant">@color/design_default_color_secondary_variant</item>
+        <item name="colorOnSecondary">@color/black</item>
+        
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        
+        <!-- Background colors -->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:colorBackground">@color/white</item>
+        
+        <!-- Text colors -->
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/darker_gray</item>
+        
+        <!-- Button styles -->
+        <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
+        
+        <!-- TextInputLayout styles -->
+        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
     </style>
 
+    <!-- Splash screen theme -->
+    <style name="Theme.HandManWork.Splash" parent="Theme.HandManWork">
+        <item name="android:windowBackground">@drawable/ic_launcher_foreground</item>
+    </style>
 </resources>

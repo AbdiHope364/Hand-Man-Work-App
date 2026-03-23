@@ -5,63 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@android:color/white"
-    tools:context=".CustomerProfileActivity">
+    android:background="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="24dp">
 
-        <!-- Back Button -->
         <ImageView
-            android:id="@+id/back_button"
+            android:id="@+id/backButton"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:contentDescription="Back"
-            android:padding="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            app:tint="@color/design_default_color_primary"
+            app:tint="#000000"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Profile Header with Avatar -->
-        <LinearLayout
-            android:id="@+id/avatar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            app:layout_constraintTop_toBottomOf="@id/back_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <ImageView
-                android:id="@+id/profile_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@android:drawable/sym_def_app_icon"
-                android:scaleType="centerCrop"
-                android:background="@color/design_default_color_primary"
-                android:padding="2dp" />
-
-            <Button
-                android:id="@+id/change_photo_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Change Photo"
-                android:textColor="@color/design_default_color_primary"
-                android:drawableStart="@android:drawable/ic_menu_camera"
-                android:drawablePadding="4dp" />
-        </LinearLayout>
-
-        <!-- Title -->
         <TextView
             android:id="@+id/profile_title"
             android:layout_width="wrap_content"
@@ -70,308 +33,173 @@
             android:text="Customer Profile"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            app:layout_constraintTop_toBottomOf="@id/avatar_layout"
+            android:textColor="#000000"
+            app:layout_constraintTop_toBottomOf="@id/backButton"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Subtitle -->
-        <TextView
-            android:id="@+id/profile_subtitle"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profileImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="32dp"
+            android:padding="2dp"
+            android:scaleType="centerCrop"
+            app:strokeColor="#000000"
+            app:strokeWidth="2dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:layout_constraintTop_toBottomOf="@id/profile_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/changePhotoButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Manage your personal information"
-            android:textColor="@android:color/darker_gray"
-            app:layout_constraintTop_toBottomOf="@id/profile_title"
+            android:text="Change Photo"
+            android:textColor="#000000"
+            app:layout_constraintTop_toBottomOf="@id/profileImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/completionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Profile Completion: 0%"
+            android:textColor="#666666"
+            app:layout_constraintTop_toBottomOf="@id/changePhotoButton"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Profile Completion Progress -->
-        <LinearLayout
-            android:id="@+id/progress_section"
+        <ProgressBar
+            android:id="@+id/completionProgress"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/profile_subtitle"
+            android:layout_marginTop="4dp"
+            android:progressTint="#000000"
+            android:progressBackgroundTint="#CCCCCC"
+            app:layout_constraintTop_toBottomOf="@id/completionText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:id="@+id/completion_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Profile Completion: 0%"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp" />
-
-            <ProgressBar
-                android:id="@+id/completion_progress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:layout_marginTop="4dp"
-                android:max="100"
-                android:progress="0"
-                android:progressTint="@color/design_default_color_primary" />
-        </LinearLayout>
-
-        <!-- Name Field (without icon) -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/name_layout"
+            android:id="@+id/nameLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:hint="Full Name *"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true"
-            app:layout_constraintTop_toBottomOf="@id/progress_section"
+            android:hint="Full Name"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
+            app:layout_constraintTop_toBottomOf="@id/completionProgress"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
-
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/name_edit_text"
+                android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter your full name"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:importantForAutofill="yes"
-                android:autofillHints="name" />
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Phone Field (without icon) -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/phone_layout"
+            android:id="@+id/phoneLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Phone Number *"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true"
-            app:layout_constraintTop_toBottomOf="@id/name_layout"
+            android:hint="Phone Number"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
+            app:layout_constraintTop_toBottomOf="@id/nameLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
-
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phone_edit_text"
+                android:id="@+id/phoneEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter your phone number"
-                android:inputType="phone"
-                android:maxLines="1"
-                android:importantForAutofill="yes"
-                android:autofillHints="phone" />
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Address Field (without icon) -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/address_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Address *"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true"
-            app:layout_constraintTop_toBottomOf="@id/phone_layout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/address_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter your address"
-                android:maxLines="3"
-                android:gravity="top"
-                android:minHeight="80dp"
-                android:importantForAutofill="yes"
-                android:autofillHints="postalAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Email Field (without icon) -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/email_layout"
+            android:id="@+id/emailLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Email Address"
-            app:endIconMode="clear_text"
-            app:helperText="Used for notifications"
-            app:layout_constraintTop_toBottomOf="@id/address_layout"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
+            app:layout_constraintTop_toBottomOf="@id/phoneLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
-
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email_edit_text"
+                android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter your email"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:importantForAutofill="yes"
-                android:autofillHints="emailAddress" />
+                android:textColor="#000000"
+                android:enabled="false" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Preferred Contact Method -->
-        <TextView
-            android:id="@+id/contact_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Preferred Contact Method"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/email_layout"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <RadioGroup
-            android:id="@+id/contact_radio_group"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/contact_label"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <RadioButton
-                android:id="@+id/contact_phone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Phone"
-                android:checked="true"
-                android:textSize="14sp" />
-
-            <RadioButton
-                android:id="@+id/contact_email"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Email"
-                android:textSize="14sp" />
-
-            <RadioButton
-                android:id="@+id/contact_both"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Both"
-                android:textSize="14sp" />
-        </RadioGroup>
-
-        <!-- Notification Preferences -->
-        <TextView
-            android:id="@+id/notification_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Notification Preferences"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/contact_radio_group"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/notification_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/notification_label"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <CheckBox
-                android:id="@+id/notify_booking_updates"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Booking updates"
-                android:checked="true"
-                android:textSize="14sp" />
-
-            <CheckBox
-                android:id="@+id/notify_promotions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Promotions and offers"
-                android:checked="false"
-                android:textSize="14sp" />
-
-            <CheckBox
-                android:id="@+id/notify_worker_messages"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Messages from workers"
-                android:checked="true"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <!-- Default Service Location (without icon) -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/default_location_layout"
+            android:id="@+id/addressLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:hint="Default Service Location (Optional)"
-            app:endIconMode="clear_text"
-            app:helperText="Where you usually need services"
-            app:layout_constraintTop_toBottomOf="@id/notification_layout"
+            android:layout_marginTop="16dp"
+            android:hint="Address"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
+            app:layout_constraintTop_toBottomOf="@id/emailLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
-
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/default_location_edit_text"
+                android:id="@+id/addressEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="e.g. Home, Office, etc."
-                android:maxLines="2" />
+                android:textColor="#000000"
+                android:minLines="2"
+                android:gravity="top" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Save Button -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/save_button"
+            android:id="@+id/saveButton"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="24dp"
-            android:text="Save Profile"
+            android:text="Save Changes"
             android:textAllCaps="false"
             android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#000000"
             app:cornerRadius="8dp"
-            app:icon="@android:drawable/ic_menu_save"
-            app:iconGravity="textStart"
-            app:backgroundTint="@color/design_default_color_primary"
-            app:layout_constraintTop_toBottomOf="@id/default_location_layout"
+            app:layout_constraintTop_toBottomOf="@id/addressLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <!-- Progress Overlay -->
         <FrameLayout
-            android:id="@+id/progress_overlay"
+            android:id="@+id/progressOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#4D000000"
+            android:background="#80000000"
             android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
+            app:layout_constraintEnd_toEndOf="parent">
             <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:indeterminateTint="@color/design_default_color_primary" />
+                android:indeterminateTint="#FFFFFF" />
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

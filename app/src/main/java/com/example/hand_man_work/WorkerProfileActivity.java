@@ -1,23 +1,42 @@
 package com.example.hand_man_work;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.hand_man_work.databinding.ActivityWorkerProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WorkerProfileActivity extends AppCompatActivity {
 
     private ActivityWorkerProfileBinding binding;
     private String userId;
+    private Uri imageUri;
+    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    imageUri = result.getData().getData();
+                    uploadProfileImage();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +51,12 @@ public class WorkerProfileActivity extends AppCompatActivity {
         }
 
         binding.backButton.setOnClickListener(v -> finish());
+        
+        binding.changePhotoButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            imagePickerLauncher.launch(intent);
+        });
 
         loadUserData();
 
@@ -58,10 +83,53 @@ public class WorkerProfileActivity extends AppCompatActivity {
                         binding.rateEditText.setText(String.valueOf(rate));
                     }
                     
-                    binding.photoUrlEditText.setText(document.getString("photoUrl"));
+                    String photoUrl = document.getString("photoUrl");
+                    if (photoUrl != null && !photoUrl.isEmpty()) {
+                        Glide.with(this).load(photoUrl).circleCrop().into(binding.profileImage);
+                    }
                 }
             } else {
                 Toast.makeText(this, "Failed to load profile data", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void uploadProfileImage() {
+        if (imageUri == null) return;
+
+        showLoading(true);
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference()
+                .child("profile_images")
+                .child(userId + ".jpg");
+
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String downloadUrl = uri.toString();
+                    savePhotoUrlToFirestore(downloadUrl);
+                }))
+                .addOnFailureListener(e -> {
+                    showLoading(false);
+                    Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void savePhotoUrlToFirestore(String url) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("photoUrl", url);
+
+        FirestoreHelper.updateWorkerProfile(userId, 
+                binding.nameEditText.getText().toString(),
+                binding.phoneEditText.getText().toString(),
+                null, // skills handled in saveProfile
+                0,    // rate handled in saveProfile
+                url, 
+                task -> {
+            showLoading(false);
+            if (task.isSuccessful()) {
+                Glide.with(this).load(url).circleCrop().into(binding.profileImage);
+                Toast.makeText(this, "Photo updated successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to update photo URL", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -71,7 +139,6 @@ public class WorkerProfileActivity extends AppCompatActivity {
         String phone = binding.phoneEditText.getText().toString().trim();
         String skillsStr = binding.skillsEditText.getText().toString().trim();
         String rateStr = binding.rateEditText.getText().toString().trim();
-        String photoUrl = binding.photoUrlEditText.getText().toString().trim();
 
         if (validateInput(name, phone, skillsStr, rateStr)) {
             List<String> skills = new ArrayList<>();
@@ -84,7 +151,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
             double rate = Double.parseDouble(rateStr);
 
             showLoading(true);
-            FirestoreHelper.updateWorkerProfile(userId, name, phone, skills, rate, photoUrl, task -> {
+            FirestoreHelper.updateWorkerProfile(userId, name, phone, skills, rate, null, task -> {
                 showLoading(false);
                 if (task.isSuccessful()) {
                     Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();

@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+X<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.hand_man_work">
-
-    <uses-permission android:name="android.permission.INTERNET" />
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="true"
@@ -13,67 +10,42 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HandManWork"
-        tools:targetApi="31">
-
-        <!-- Login Activity (LAUNCHER) -->
+        android:theme="@style/Theme.HandManWork">
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.HandManWork">
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Register Activity -->
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
-
-        <!-- User Type Selection -->
         <activity
             android:name=".UserTypeSelectionActivity"
             android:exported="false" />
-
-        <!-- Customer Activities -->
-        <activity
-            android:name=".CustomerHomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CustomerProfileActivity"
-            android:exported="false" />
         <activity
             android:name=".CustomerDashboardActivity"
-            android:exported="false" />
-
-        <!-- Worker Activities -->
-        <activity
-            android:name=".WorkerProfileActivity"
             android:exported="false" />
         <activity
             android:name=".HandymanDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".WorkerDashboardActivity"
+            android:name=".CustomerProfileActivity"
             android:exported="false" />
-
-        <!-- Booking Activity -->
         <activity
-            android:name=".BookingActivity"
+            android:name=".WorkerProfileActivity"
             android:exported="false" />
-
-        <!-- Setup Data Activity (temporary) -->
         <activity
-            android:name=".SetupDataActivity"
+            android:name=".CustomerHomeActivity"
             android:exported="false" />
-
-        <!-- Main Activity (if still needed) -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-
     </application>
 
-</manifest>
+<
+X
+
+B
+
+B/manifest>

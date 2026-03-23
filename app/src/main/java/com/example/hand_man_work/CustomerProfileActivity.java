@@ -1,16 +1,23 @@
 package com.example.hand_man_work;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.hand_man_work.databinding.ActivityCustomerProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +26,16 @@ public class CustomerProfileActivity extends AppCompatActivity {
 
     private ActivityCustomerProfileBinding binding;
     private String userId;
+    private Uri imageUri;
+    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    imageUri = result.getData().getData();
+                    uploadProfileImage();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +57,9 @@ public class CustomerProfileActivity extends AppCompatActivity {
         binding.saveButton.setOnClickListener(v -> saveProfile());
         
         binding.changePhotoButton.setOnClickListener(v -> {
-            Toast.makeText(this, "Photo upload coming soon", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            imagePickerLauncher.launch(intent);
         });
     }
 
@@ -83,10 +102,49 @@ public class CustomerProfileActivity extends AppCompatActivity {
                     binding.addressEditText.setText(document.getString("address"));
                     binding.emailEditText.setText(document.getString("email"));
                     
+                    String photoUrl = document.getString("photoUrl");
+                    if (photoUrl != null && !photoUrl.isEmpty()) {
+                        Glide.with(this).load(photoUrl).circleCrop().into(binding.profileImage);
+                    }
+                    
                     updateProgress();
                 }
             } else {
                 Toast.makeText(this, "Failed to load profile data", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void uploadProfileImage() {
+        if (imageUri == null) return;
+
+        showLoading(true);
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference()
+                .child("profile_images")
+                .child(userId + ".jpg");
+
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String downloadUrl = uri.toString();
+                    savePhotoUrlToFirestore(downloadUrl);
+                }))
+                .addOnFailureListener(e -> {
+                    showLoading(false);
+                    Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void savePhotoUrlToFirestore(String url) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("photoUrl", url);
+
+        FirestoreHelper.updateCustomerProfile(userId, updates, task -> {
+            showLoading(false);
+            if (task.isSuccessful()) {
+                Glide.with(this).load(url).circleCrop().into(binding.profileImage);
+                Toast.makeText(this, "Photo updated successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to update photo URL", Toast.LENGTH_SHORT).show();
             }
         });
     }

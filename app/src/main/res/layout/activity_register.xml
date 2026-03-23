@@ -5,319 +5,226 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@android:color/white"
-    tools:context=".RegisterActivity">
+    android:background="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp">
+        android:padding="24dp"
+        tools:context=".RegisterActivity">
 
-        <!-- Back Button using built-in home icon -->
         <ImageView
-            android:id="@+id/back_button"
+            android:id="@+id/backButton"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:contentDescription="Back"
-            android:padding="8dp"
+            android:padding="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginTop="8dp"
-            app:tint="@color/design_default_color_primary"
+            app:tint="#000000"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Title -->
         <TextView
-            android:id="@+id/title_text"
+            android:id="@+id/register_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:text="Create Account"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/back_button" />
+            android:textColor="#000000"
+            app:layout_constraintTop_toBottomOf="@id/backButton"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Subtitle -->
         <TextView
-            android:id="@+id/subtitle_text"
+            android:id="@+id/register_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Join us to get started"
-            android:textSize="16sp"
-            android:textColor="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title_text" />
+            android:text="Start your journey with Hand-Man-Work today"
+            android:textColor="#666666"
+            app:layout_constraintTop_toBottomOf="@id/register_title"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Full Name Field (without icon) -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/name_layout"
+            android:id="@+id/nameLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:hint="Full Name"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:layout_constraintTop_toBottomOf="@id/register_subtitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/subtitle_text">
-
+            app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/name_edit_text"
+                android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:importantForAutofill="yes"
-                android:autofillHints="name" />
+                android:textColor="#000000"
+                android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Phone Number Field (without icon) -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/phone_layout"
+            android:id="@+id/phoneLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Phone Number"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:layout_constraintTop_toBottomOf="@id/nameLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/name_layout">
-
+            app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phone_edit_text"
+                android:id="@+id/phoneEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone"
-                android:maxLines="1"
-                android:importantForAutofill="yes"
-                android:autofillHints="phone" />
+                android:textColor="#000000"
+                android:inputType="phone" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Email Field (without icon) -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/email_layout"
+            android:id="@+id/emailLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Email Address"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:layout_constraintTop_toBottomOf="@id/phoneLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/phone_layout">
-
+            app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email_edit_text"
+                android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:importantForAutofill="yes"
-                android:autofillHints="emailAddress" />
+                android:textColor="#000000"
+                android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Password Field (without icon) -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password_layout"
+            android:id="@+id/passwordLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Password"
-            app:endIconMode="password_toggle"
-            app:errorEnabled="true"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
             app:passwordToggleEnabled="true"
-            app:counterEnabled="true"
-            app:counterMaxLength="20"
-            app:helperText="Minimum 8 characters"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/emailLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email_layout">
-
+            app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/password_edit_text"
+                android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:minHeight="48dp"
-                android:importantForAutofill="yes"
-                android:autofillHints="password" />
+                android:textColor="#000000"
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Confirm Password Field (without icon) -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/confirm_password_layout"
+            android:id="@+id/confirmPasswordLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Confirm Password"
-            app:endIconMode="password_toggle"
-            app:errorEnabled="true"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
             app:passwordToggleEnabled="true"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/passwordLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password_layout">
-
+            app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/confirm_password_edit_text"
+                android:id="@+id/confirmPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:minHeight="48dp"
-                android:importantForAutofill="yes"
-                android:autofillHints="password" />
+                android:textColor="#000000"
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Terms and Conditions Checkbox -->
-        <LinearLayout
-            android:id="@+id/terms_layout"
-            android:layout_width="0dp"
+        <CheckBox
+            android:id="@+id/termsCheckbox"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/confirm_password_layout">
+            android:text="I agree to the Terms and Conditions"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/confirmPasswordLayout"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <CheckBox
-                android:id="@+id/terms_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="I agree to the "
-                android:textColor="@android:color/darker_gray" />
-
-            <TextView
-                android:id="@+id/terms_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Terms of Service"
-                android:textColor="@color/design_default_color_primary"
-                android:textStyle="bold"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" and "
-                android:textColor="@android:color/darker_gray" />
-
-            <TextView
-                android:id="@+id/privacy_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Privacy Policy"
-                android:textColor="@color/design_default_color_primary"
-                android:textStyle="bold"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true" />
-        </LinearLayout>
-
-        <!-- Register Button -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/register_button"
+            android:id="@+id/registerButton"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
-            android:text="Create Account"
-            android:textSize="16sp"
+            android:text="Register"
             android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#000000"
             app:cornerRadius="8dp"
-            app:backgroundTint="@color/design_default_color_primary"
-            app:rippleColor="@color/design_default_color_primary_variant"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/termsCheckbox"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/terms_layout" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Divider -->
-        <LinearLayout
-            android:id="@+id/divider_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/register_button">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@android:color/darker_gray" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:text="OR"
-                android:textColor="@android:color/darker_gray" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@android:color/darker_gray" />
-        </LinearLayout>
-
-        <!-- Google Sign-In Button -->
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/google_sign_in_button"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="32dp"
-            app:buttonSize="wide"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_layout" />
-
-        <!-- Login Link -->
         <TextView
-            android:id="@+id/login_text"
+            android:id="@+id/divider"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:text="Already have an account? Sign In"
-            android:textColor="@android:color/darker_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="OR"
+            android:textColor="#666666"
+            app:layout_constraintTop_toBottomOf="@id/registerButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/google_sign_in_button" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Progress Overlay -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/googleSignInButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:text="Continue with Google"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            app:strokeColor="#000000"
+            app:cornerRadius="8dp"
+            app:icon="@android:drawable/ic_menu_myplaces"
+            app:iconTint="#000000"
+            app:iconGravity="textStart"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/loginText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp"
+            android:text="Already have an account? Login"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/googleSignInButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
         <FrameLayout
-            android:id="@+id/progress_overlay"
+            android:id="@+id/progressOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#4D000000"
+            android:background="#80000000"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -325,10 +232,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ProgressBar
-                android:id="@+id/progress_bar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:indeterminateTint="#FFFFFF" />
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

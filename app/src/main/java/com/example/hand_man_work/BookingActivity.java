@@ -16,9 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-/**
- * Phase 4: Implementation of booking request functionality.
- */
 public class BookingActivity extends AppCompatActivity {
 
     private ActivityBookingBinding binding;
@@ -33,6 +30,11 @@ public class BookingActivity extends AppCompatActivity {
         binding = ActivityBookingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Enable back button in action bar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         workerId = getIntent().getStringExtra("workerId");
         workerName = getIntent().getStringExtra("workerName");
 
@@ -42,7 +44,7 @@ public class BookingActivity extends AppCompatActivity {
             return;
         }
 
-        binding.backButton.setOnClickListener(v -> finish());
+        // Setup views
         binding.workerInfoText.setText("Booking with: " + workerName);
         
         selectedDateTime = Calendar.getInstance();
@@ -51,6 +53,15 @@ public class BookingActivity extends AppCompatActivity {
         binding.datePickerButton.setOnClickListener(v -> showDatePicker());
         binding.timePickerButton.setOnClickListener(v -> showTimePicker());
         binding.submitBookingButton.setOnClickListener(v -> submitBooking());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showDatePicker() {
@@ -120,7 +131,6 @@ public class BookingActivity extends AppCompatActivity {
                     showLoading(false);
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Booking request sent!", Toast.LENGTH_LONG).show();
-                        // Return to home screen
                         Intent intent = new Intent(this, CustomerHomeActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
@@ -133,7 +143,9 @@ public class BookingActivity extends AppCompatActivity {
     }
 
     private void showLoading(boolean isLoading) {
-        binding.progressOverlay.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        if (binding.progressOverlay != null) {
+            binding.progressOverlay.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        }
         binding.submitBookingButton.setEnabled(!isLoading);
     }
 }
