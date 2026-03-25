@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.hand_man_work.databinding.ItemWorkerBinding;
 
 import java.util.List;
@@ -56,6 +57,18 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
             binding.workerName.setText(worker.getName());
             binding.workerSkills.setText("Skills: " + worker.getSkillsString());
             binding.workerRate.setText(String.format(Locale.getDefault(), "$%.2f/hr", worker.getHourlyRate()));
+            
+            // Load worker photo using Glide
+            if (worker.getPhotoUrl() != null && !worker.getPhotoUrl().isEmpty()) {
+                Glide.with(itemView.getContext())
+                    .load(worker.getPhotoUrl())
+                    .circleCrop()
+                    .placeholder(android.R.drawable.sym_def_app_icon)
+                    .error(android.R.drawable.sym_def_app_icon)
+                    .into(binding.workerImage);
+            } else {
+                binding.workerImage.setImageResource(android.R.drawable.sym_def_app_icon);
+            }
             
             // Set click listener on the entire item
             itemView.setOnClickListener(v -> {

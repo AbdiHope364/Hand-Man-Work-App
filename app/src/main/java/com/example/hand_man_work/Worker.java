@@ -9,16 +9,18 @@ public class Worker {
     private double hourlyRate;
     private String phone;
     private String type;
+    private String photoUrl;
 
     // Required empty constructor for Firestore
     public Worker() {}
 
-    public Worker(String uid, String name, List<String> skills, double hourlyRate) {
+    public Worker(String uid, String name, List<String> skills, double hourlyRate, String photoUrl) {
         this.uid = uid;
         this.name = name;
         this.skills = skills;
         this.hourlyRate = hourlyRate;
         this.type = "worker";
+        this.photoUrl = photoUrl;
     }
 
     // Getters and Setters
@@ -45,4 +47,7 @@ public class Worker {
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+
+    public String getPhotoUrl() { return photoUrl; }
+    public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
 }

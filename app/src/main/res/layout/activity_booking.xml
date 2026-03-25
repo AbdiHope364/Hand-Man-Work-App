@@ -5,13 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@android:color/white">
+    android:background="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="24dp"
         tools:context=".BookingActivity">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Back"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_menu_revert"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#000000" />
 
         <!-- Title -->
         <TextView
@@ -22,8 +37,8 @@
             android:text="Book Service"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="#000000"
+            app:layout_constraintTop_toBottomOf="@id/backButton"
             app:layout_constraintStart_toStartOf="parent" />
 
         <!-- Worker Info -->
@@ -33,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Booking with: "
-            android:textColor="@android:color/darker_gray"
+            android:textColor="#666666"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/booking_title"
             app:layout_constraintStart_toStartOf="parent" />
@@ -47,6 +62,9 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:text="Select Date"
+            android:textColor="#000000"
+            app:strokeColor="#000000"
+            app:iconTint="#000000"
             app:icon="@android:drawable/ic_menu_my_calendar"
             app:layout_constraintEnd_toStartOf="@+id/timePickerButton"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,6 +78,9 @@
             android:layout_height="56dp"
             android:layout_marginStart="8dp"
             android:text="Select Time"
+            android:textColor="#000000"
+            app:strokeColor="#000000"
+            app:iconTint="#000000"
             app:icon="@android:drawable/ic_menu_recent_history"
             app:layout_constraintBottom_toBottomOf="@+id/datePickerButton"
             app:layout_constraintEnd_toEndOf="parent"
@@ -71,9 +92,10 @@
             android:id="@+id/dateTimeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/design_default_color_primary"
+            android:layout_marginTop="12dp"
+            android:textColor="#000000"
             android:textStyle="bold"
+            android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/datePickerButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -87,6 +109,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:hint="Job Description"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +123,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="top"
                 android:inputType="textMultiLine"
-                android:minLines="3" />
+                android:minLines="3"
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Location -->
@@ -109,6 +135,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Service Location"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -118,7 +147,8 @@
                 android:id="@+id/locationEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPostalAddress" />
+                android:inputType="textPostalAddress"
+                android:textColor="#000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Submit Button -->
@@ -131,6 +161,8 @@
             android:text="Submit Booking Request"
             android:textAllCaps="false"
             android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#000000"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -142,7 +174,7 @@
             android:id="@+id/progressOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#4D000000"
+            android:background="#80000000"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -153,7 +185,8 @@
                 android:id="@+id/progressBar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:indeterminateTint="#FFFFFF" />
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

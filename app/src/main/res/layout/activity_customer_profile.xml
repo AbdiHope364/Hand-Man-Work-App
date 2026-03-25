@@ -12,41 +12,45 @@
         android:layout_height="wrap_content"
         android:padding="24dp">
 
+        <!-- Unified Back Button -->
         <ImageView
             android:id="@+id/backButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:contentDescription="Back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:contentDescription="Back"
             android:focusable="true"
-            app:tint="#000000"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_menu_revert"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#000000" />
 
         <TextView
             android:id="@+id/profile_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Customer Profile"
-            android:textSize="28sp"
+            android:layout_marginStart="12dp"
+            android:text="My Profile"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#000000"
-            app:layout_constraintTop_toBottomOf="@id/backButton"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/backButton"
+            app:layout_constraintBottom_toBottomOf="@id/backButton"
+            app:layout_constraintStart_toEndOf="@id/backButton" />
 
+        <!-- Profile Image with Interactive Selection -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profileImage"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:layout_marginTop="32dp"
-            android:padding="2dp"
+            android:padding="4dp"
             android:scaleType="centerCrop"
             app:strokeColor="#000000"
             app:strokeWidth="2dp"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.MediumComponent"
             android:src="@android:drawable/sym_def_app_icon"
             app:layout_constraintTop_toBottomOf="@id/profile_title"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,52 +61,69 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change Photo"
+            android:text="Update Photo"
             android:textColor="#000000"
+            android:textStyle="bold"
+            app:icon="@android:drawable/ic_menu_camera"
+            app:iconTint="#000000"
             app:layout_constraintTop_toBottomOf="@id/profileImage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/completionText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Profile Completion: 0%"
-            android:textColor="#666666"
-            app:layout_constraintTop_toBottomOf="@id/changePhotoButton"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ProgressBar
-            android:id="@+id/completionProgress"
-            style="?android:attr/progressBarStyleHorizontal"
+        <!-- Completion Indicator -->
+        <LinearLayout
+            android:id="@+id/progressArea"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:progressTint="#000000"
-            android:progressBackgroundTint="#CCCCCC"
-            app:layout_constraintTop_toBottomOf="@id/completionText"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/changePhotoButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
 
+            <TextView
+                android:id="@+id/completionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile Completion: 0%"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/completionProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:layout_marginTop="8dp"
+                android:progressTint="#000000"
+                android:progressBackgroundTint="#EEEEEE"
+                android:scaleY="2" />
+        </LinearLayout>
+
+        <!-- Input Fields with High Interactivity -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nameLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:hint="Full Name"
             app:hintTextColor="#000000"
             android:textColorHint="#666666"
             app:boxStrokeColor="#000000"
-            app:layout_constraintTop_toBottomOf="@id/completionProgress"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+            app:startIconTint="#000000"
+            app:layout_constraintTop_toBottomOf="@id/progressArea"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -115,6 +136,9 @@
             app:hintTextColor="#000000"
             android:textColorHint="#666666"
             app:boxStrokeColor="#000000"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@android:drawable/stat_sys_phone_call"
+            app:startIconTint="#000000"
             app:layout_constraintTop_toBottomOf="@id/nameLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -122,7 +146,34 @@
                 android:id="@+id/phoneEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addressLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Home Address"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@android:drawable/ic_dialog_map"
+            app:startIconTint="#000000"
+            app:layout_constraintTop_toBottomOf="@id/phoneLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addressEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:minLines="2"
+                android:gravity="top"
+                android:inputType="textPostalAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -135,7 +186,10 @@
             app:hintTextColor="#000000"
             android:textColorHint="#666666"
             app:boxStrokeColor="#000000"
-            app:layout_constraintTop_toBottomOf="@id/phoneLayout"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@android:drawable/ic_dialog_email"
+            app:startIconTint="#000000"
+            app:layout_constraintTop_toBottomOf="@id/addressLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
@@ -143,61 +197,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
-                android:enabled="false" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/addressLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Address"
-            app:hintTextColor="#000000"
-            android:textColorHint="#666666"
-            app:boxStrokeColor="#000000"
-            app:layout_constraintTop_toBottomOf="@id/emailLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/addressEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:minLines="2"
-                android:gravity="top" />
+                android:enabled="false"
+                android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/saveButton"
             android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="32dp"
+            android:layout_height="64dp"
+            android:layout_marginTop="40dp"
             android:layout_marginBottom="24dp"
-            android:text="Save Changes"
-            android:textAllCaps="false"
-            android:textSize="16sp"
+            android:text="SAVE PROFILE"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:textColor="#FFFFFF"
             app:backgroundTint="#000000"
-            app:cornerRadius="8dp"
-            app:layout_constraintTop_toBottomOf="@id/addressLayout"
+            app:cornerRadius="12dp"
+            app:elevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/emailLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
+        <!-- High-Visibility Loading Overlay -->
         <FrameLayout
             android:id="@+id/progressOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#80000000"
+            android:background="#CC000000"
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:indeterminateTint="#FFFFFF" />
         </FrameLayout>

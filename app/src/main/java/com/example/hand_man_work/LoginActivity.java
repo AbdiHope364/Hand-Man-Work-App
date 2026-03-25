@@ -36,6 +36,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleSignInHelp
             mAuth = FirebaseAuth.getInstance();
             db = FirebaseFirestore.getInstance();
 
+            // ONE-TIME USE SESSION: Force sign out every time the login screen is created (app start)
+            if (mAuth.getCurrentUser() != null) {
+                mAuth.signOut();
+            }
+
             // Initialize Google Sign-In Helper
             googleSignInHelper = new GoogleSignInHelper(this, this);
             googleSignInLauncher = registerForActivityResult(
@@ -47,11 +52,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleSignInHelp
                     }
             );
 
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            if (currentUser != null) {
-                redirectUserBasedOnType(currentUser);
-            }
-
             setupClickListeners();
             
         } catch (Exception e) {
@@ -61,6 +61,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleSignInHelp
     }
 
     private void setupClickListeners() {
+        if (binding.backButton != null) {
+            binding.backButton.setOnClickListener(v -> finish());
+        }
         binding.loginButton.setOnClickListener(v -> loginUser());
         binding.signUpText.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
         

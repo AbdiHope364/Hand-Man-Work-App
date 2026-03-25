@@ -1,201 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@android:color/white">
+    android:background="#FFFFFF">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Back Button -->
+        <!-- High-Visibility Back Button -->
         <ImageView
-            android:id="@+id/back_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:contentDescription="Back"
+            android:id="@+id/backButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:contentDescription="Back"
             android:focusable="true"
-            android:layout_marginBottom="16dp" />
+            android:padding="8dp"
+            android:src="@android:drawable/ic_menu_revert"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#000000" />
 
-        <!-- Title -->
         <TextView
             android:id="@+id/profile_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:text="Worker Profile"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="24dp" />
+            android:textColor="#000000"
+            app:layout_constraintTop_toTopOf="@id/backButton"
+            app:layout_constraintBottom_toBottomOf="@id/backButton"
+            app:layout_constraintStart_toEndOf="@id/backButton" />
 
-        <!-- Profile Image -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Profile Image with High Contrast Border -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profileImage"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginTop="32dp"
+            android:padding="4dp"
+            android:scaleType="centerCrop"
+            app:strokeColor="#000000"
+            app:strokeWidth="2dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.MediumComponent"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:layout_constraintTop_toBottomOf="@id/profile_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/changePhotoButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="24dp">
+            android:text="Update Photo"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            app:icon="@android:drawable/ic_menu_camera"
+            app:iconTint="#000000"
+            app:layout_constraintTop_toBottomOf="@id/profileImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <ImageView
-                android:id="@+id/profile_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@android:drawable/sym_def_app_icon"
-                android:scaleType="centerCrop"
-                android:background="@color/design_default_color_primary"
-                android:padding="2dp" />
-
-            <Button
-                android:id="@+id/change_photo_button"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Change Photo"
-                android:textColor="@color/design_default_color_primary" />
-        </LinearLayout>
-
-        <!-- Name Field -->
+        <!-- Modern Input Fields with Icons -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/name_layout"
+            android:id="@+id/nameLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Full Name *"
-            app:errorEnabled="true">
-
+            android:layout_marginTop="24dp"
+            android:hint="Full Name"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+            app:startIconTint="#000000"
+            app:layout_constraintTop_toBottomOf="@id/changePhotoButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/name_edit_text"
+                android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:padding="16dp" />
+                android:textColor="#000000"
+                android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Phone Field -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/phone_layout"
+            android:id="@+id/phoneLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Phone Number *"
-            app:errorEnabled="true">
-
+            android:layout_marginTop="16dp"
+            android:hint="Phone Number"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@android:drawable/stat_sys_phone_call"
+            app:startIconTint="#000000"
+            app:layout_constraintTop_toBottomOf="@id/nameLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phone_edit_text"
+                android:id="@+id/phoneEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone"
-                android:maxLines="1"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:padding="16dp" />
+                android:textColor="#000000"
+                android:inputType="phone" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Skills Field -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/skills_layout"
+            android:id="@+id/skillsLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Skills *"
-            app:errorEnabled="true"
-            app:helperText="Enter skills separated by commas">
-
+            android:layout_marginTop="16dp"
+            android:hint="Skills (comma separated)"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@android:drawable/ic_menu_preferences"
+            app:startIconTint="#000000"
+            app:helperText="e.g. Plumbing, Electrical, Carpentry"
+            app:helperTextTextColor="#666666"
+            app:layout_constraintTop_toBottomOf="@id/phoneLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/skills_edit_text"
+                android:id="@+id/skillsEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="3"
+                android:textColor="#000000"
+                android:minLines="2"
                 android:gravity="top"
-                android:minHeight="80dp"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:padding="16dp" />
+                android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Hourly Rate Field -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/rate_layout"
+            android:id="@+id/rateLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Hourly Rate *"
+            android:layout_marginTop="16dp"
+            android:hint="Hourly Rate"
+            app:hintTextColor="#000000"
+            android:textColorHint="#666666"
+            app:boxStrokeColor="#000000"
+            app:boxStrokeWidthFocused="2dp"
+            app:startIconDrawable="@android:drawable/ic_menu_agenda"
+            app:startIconTint="#000000"
             app:prefixText="$"
+            app:prefixTextColor="#000000"
             app:suffixText="/hr"
-            app:errorEnabled="true">
-
+            app:suffixTextColor="#000000"
+            app:layout_constraintTop_toBottomOf="@id/skillsLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/rate_edit_text"
+                android:id="@+id/rateEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:maxLines="1"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:padding="16dp" />
+                android:textColor="#000000"
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Photo URL Field -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/photo_url_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <!-- Solid Professional Save Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveButton"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_marginTop="40dp"
             android:layout_marginBottom="24dp"
-            android:hint="Photo URL (Optional)">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/photo_url_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textUri"
-                android:maxLines="1"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:padding="16dp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Save Button -->
-        <Button
-            android:id="@+id/save_button"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Save Profile"
-            android:textAllCaps="false"
-            android:textSize="16sp"
+            android:text="SAVE WORKER PROFILE"
+            android:textAllCaps="true"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:backgroundTint="@color/design_default_color_primary"
             android:textColor="#FFFFFF"
-            android:layout_marginBottom="24dp" />
+            app:backgroundTint="#000000"
+            app:cornerRadius="12dp"
+            app:elevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/rateLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-        <!-- Progress Overlay -->
+        <!-- High-Contrast Loading Overlay -->
         <FrameLayout
-            android:id="@+id/progress_overlay"
+            android:id="@+id/progressOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#4D000000"
-            android:visibility="gone">
-
+            android:background="#CC000000"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
             <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="#FFFFFF" />
         </FrameLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

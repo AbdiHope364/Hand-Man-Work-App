@@ -24,6 +24,11 @@ public class UserTypeSelectionActivity extends AppCompatActivity {
         binding = ActivityUserTypeSelectionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Back button logic
+        if (binding.backButton != null) {
+            binding.backButton.setOnClickListener(v -> finish());
+        }
+
         binding.customerButton.setOnClickListener(v -> completeRegistration("customer"));
         binding.workerButton.setOnClickListener(v -> completeRegistration("worker"));
     }
@@ -48,7 +53,8 @@ public class UserTypeSelectionActivity extends AppCompatActivity {
                 if ("customer".equals(type)) {
                     intent = new Intent(this, CustomerDashboardActivity.class);
                 } else {
-                    intent = new Intent(this, HandymanDashboardActivity.class);
+                    // Using WorkerDashboardActivity as it seems to be the one used in LoginActivity
+                    intent = new Intent(this, WorkerDashboardActivity.class);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

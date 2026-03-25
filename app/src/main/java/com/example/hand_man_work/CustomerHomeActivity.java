@@ -27,29 +27,25 @@ public class CustomerHomeActivity extends AppCompatActivity {
         binding = ActivityCustomerHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Setup toolbar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Available Workers");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Change back button to navigate to Customer Profile Activity
+        binding.backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(CustomerHomeActivity.this, CustomerProfileActivity.class);
+            startActivity(intent);
+        });
 
         // Initialize
         workerList = new ArrayList<>();
         
-        // Set up the adapter with click listener
         adapter = new WorkerAdapter(workerList, worker -> {
-            // This is where navigation to BookingActivity happens
             Intent intent = new Intent(CustomerHomeActivity.this, BookingActivity.class);
             intent.putExtra("workerId", worker.getUid());
             intent.putExtra("workerName", worker.getName());
             startActivity(intent);
         });
 
-        // Setup RecyclerView
         binding.workerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.workerRecyclerView.setAdapter(adapter);
 
-        // Load workers from Firestore
         loadWorkers();
     }
 
@@ -75,25 +71,12 @@ public class CustomerHomeActivity extends AppCompatActivity {
                 
                 if (workerList.isEmpty()) {
                     binding.emptyStateText.setVisibility(View.VISIBLE);
-                } else {
-                    Toast.makeText(this, "Found " + workerList.size() + " workers", 
-                        Toast.LENGTH_SHORT).show();
                 }
             })
             .addOnFailureListener(e -> {
                 binding.progressBar.setVisibility(View.GONE);
                 binding.emptyStateText.setVisibility(View.VISIBLE);
                 binding.emptyStateText.setText("Error: " + e.getMessage());
-                Toast.makeText(this, "Failed to load workers", Toast.LENGTH_SHORT).show();
             });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

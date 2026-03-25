@@ -1,27 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="#FFFFFF"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <ImageView
+        <!-- Worker Image with High Contrast Border -->
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/workerImage"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:padding="2dp"
+            android:scaleType="centerCrop"
+            app:strokeColor="#000000"
+            app:strokeWidth="2dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent"
             android:src="@android:drawable/sym_def_app_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <!-- High Visibility Name -->
         <TextView
             android:id="@+id/workerName"
             android:layout_width="0dp"
@@ -30,11 +42,12 @@
             android:text="Worker Name"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="#000000"
             app:layout_constraintStart_toEndOf="@id/workerImage"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/workerImage"
             app:layout_constraintEnd_toStartOf="@id/workerRate"/>
 
+        <!-- High Visibility Skills -->
         <TextView
             android:id="@+id/workerSkills"
             android:layout_width="0dp"
@@ -42,11 +55,12 @@
             android:layout_marginTop="4dp"
             android:text="Skills: Plumbing, Electrical"
             android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="#666666"
             app:layout_constraintStart_toStartOf="@id/workerName"
             app:layout_constraintTop_toBottomOf="@id/workerName"
             app:layout_constraintEnd_toEndOf="@id/workerName"/>
 
+        <!-- High Visibility Rate -->
         <TextView
             android:id="@+id/workerRate"
             android:layout_width="wrap_content"
@@ -54,10 +68,21 @@
             android:text="$25/hr"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/design_default_color_primary"
+            android:textColor="#000000"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/workerName" />
+
+        <!-- Navigation Chevron (Interactive Visual) -->
+        <ImageView
+            android:id="@+id/navigationChevron"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_media_play"
+            android:rotation="0"
+            app:tint="#000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/workerRate" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

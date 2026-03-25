@@ -3,17 +3,18 @@
     <!-- Base application theme -->
     <style name="Theme.HandManWork" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand colors -->
-        <item name="colorPrimary">@color/design_default_color_primary</item>
-        <item name="colorPrimaryVariant">@color/design_default_color_primary_variant</item>
+        <item name="colorPrimary">#000000</item>
+        <item name="colorPrimaryVariant">#333333</item>
         <item name="colorOnPrimary">@color/white</item>
         
         <!-- Secondary brand colors -->
-        <item name="colorSecondary">@color/design_default_color_secondary</item>
-        <item name="colorSecondaryVariant">@color/design_default_color_secondary_variant</item>
+        <item name="colorSecondary">#000000</item>
+        <item name="colorSecondaryVariant">#333333</item>
         <item name="colorOnSecondary">@color/black</item>
         
         <!-- Status bar color -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">#000000</item>
+        <item name="android:windowLightStatusBar">false</item>
         
         <!-- Background colors -->
         <item name="android:windowBackground">@color/white</item>
@@ -22,13 +23,34 @@
         <!-- Text colors -->
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorPrimary">@color/black</item>
-        <item name="android:textColorSecondary">@color/darker_gray</item>
+        <item name="android:textColorSecondary">#666666</item>
+        
+        <!-- Dialog Themes for Calendar/Time Picker -->
+        <item name="android:datePickerDialogTheme">@style/CustomPickerTheme</item>
+        <item name="android:timePickerDialogTheme">@style/CustomPickerTheme</item>
         
         <!-- Button styles -->
         <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
         
         <!-- TextInputLayout styles -->
         <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
+    </style>
+
+    <!-- High-Contrast Picker Theme -->
+    <style name="CustomPickerTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">#000000</item> <!-- Header Background -->
+        <item name="colorAccent">#000000</item> <!-- Selection Color -->
+        <item name="android:textColorPrimary">#000000</item> <!-- Body Text -->
+        <item name="android:textColorSecondary">#666666</item> <!-- Subtitle Text -->
+        <item name="android:headerBackground">#000000</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/PickerButtonStyle</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/PickerButtonStyle</item>
+    </style>
+
+    <style name="PickerButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">#000000</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Splash screen theme -->
