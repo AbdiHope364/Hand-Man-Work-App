@@ -5,12 +5,17 @@ plugins {
 
 android {
     namespace = "com.example.hand_man_work"
-    compileSdk = 35 // Changed to 35 (Stable)
+
+    // FIX 1: Updated to 36 to satisfy AAR metadata requirements
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.hand_man_work"
         minSdk = 24
-        targetSdk = 35 // Aligned with compileSdk
+
+        // FIX 2: Updated to 36 to match compileSdk
+        targetSdk = 36
+
         versionCode = 1
         versionName = "1.0"
 
@@ -26,10 +31,12 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         viewBinding = true
     }
@@ -41,14 +48,11 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation("androidx.core:core-splashscreen:1.0.1")
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
 
-    // Firebase BoM
+    // Firebase BoM (Bill of Materials)
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
 
-    // Firebase products (No versions needed, managed by BoM)
+    // Firebase products (Managed by BoM)
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
@@ -56,9 +60,11 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-messaging")
 
-    // FIXED: Removed :21.2.0 to resolve "Duplicate resources"
+    // FIX 3: Removed ":21.2.0" to prevent duplicate resource errors.
+    // The Firebase BoM will now choose the correct compatible version automatically.
     implementation("com.google.android.gms:play-services-auth")
 
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 }
