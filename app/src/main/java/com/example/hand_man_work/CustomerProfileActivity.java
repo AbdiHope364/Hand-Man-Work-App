@@ -57,9 +57,9 @@ public class CustomerProfileActivity extends AppCompatActivity {
         binding.saveButton.setOnClickListener(v -> saveProfile());
         
         binding.changePhotoButton.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
-            imagePickerLauncher.launch(intent);
+            imagePickerLauncher.launch(Intent.createChooser(intent, "Select Picture"));
         });
     }
 
@@ -119,9 +119,10 @@ public class CustomerProfileActivity extends AppCompatActivity {
         if (imageUri == null) return;
 
         showLoading(true);
+        // Use unique path to avoid cache issues
         StorageReference storageRef = FirebaseStorage.getInstance().getReference()
                 .child("profile_images")
-                .child(userId + ".jpg");
+                .child(userId + "_" + System.currentTimeMillis() + ".jpg");
 
         storageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
@@ -144,7 +145,7 @@ public class CustomerProfileActivity extends AppCompatActivity {
                 Glide.with(this).load(url).circleCrop().into(binding.profileImage);
                 Toast.makeText(this, "Photo updated successfully", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Failed to update photo URL", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to update photo URL in database", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -28,6 +28,8 @@ public class WorkerProfileActivity extends AppCompatActivity {
     private ActivityWorkerProfileBinding binding;
     private String userId;
     private Uri imageUri;
+    
+    // Improved Image Picker Launcher for maximum compatibility
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -50,12 +52,14 @@ public class WorkerProfileActivity extends AppCompatActivity {
             return;
         }
 
+        // Back button
         binding.backButton.setOnClickListener(v -> finish());
         
+        // Setup interactive photo picker
         binding.changePhotoButton.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
-            imagePickerLauncher.launch(intent);
+            imagePickerLauncher.launch(Intent.createChooser(intent, "Select Profile Picture"));
         });
 
         loadUserData();
@@ -73,8 +77,9 @@ public class WorkerProfileActivity extends AppCompatActivity {
                     binding.nameEditText.setText(document.getString("name"));
                     binding.phoneEditText.setText(document.getString("phone"));
                     
-                    List<String> skills = (List<String>) document.get("skills");
-                    if (skills != null) {
+                    Object skillsObj = document.get("skills");
+                    if (skillsObj instanceof List) {
+                        List<String> skills = (List<String>) skillsObj;
                         binding.skillsEditText.setText(TextUtils.join(", ", skills));
                     }
                     
@@ -89,7 +94,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                Toast.makeText(this, "Failed to load profile data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -98,9 +103,10 @@ public class WorkerProfileActivity extends AppCompatActivity {
         if (imageUri == null) return;
 
         showLoading(true);
+        // Using unique path to bypass cache and ensure instant update
         StorageReference storageRef = FirebaseStorage.getInstance().getReference()
                 .child("profile_images")
-                .child(userId + ".jpg");
+                .child(userId + "_" + System.currentTimeMillis() + ".jpg");
 
         storageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
@@ -109,7 +115,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
                 }))
                 .addOnFailureListener(e -> {
                     showLoading(false);
-                    Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 
@@ -117,19 +123,13 @@ public class WorkerProfileActivity extends AppCompatActivity {
         Map<String, Object> updates = new HashMap<>();
         updates.put("photoUrl", url);
 
-        FirestoreHelper.updateWorkerProfile(userId, 
-                binding.nameEditText.getText().toString(),
-                binding.phoneEditText.getText().toString(),
-                null, // skills handled in saveProfile
-                0,    // rate handled in saveProfile
-                url, 
-                task -> {
+        FirestoreHelper.updateUser(userId, updates, task -> {
             showLoading(false);
             if (task.isSuccessful()) {
                 Glide.with(this).load(url).circleCrop().into(binding.profileImage);
                 Toast.makeText(this, "Photo updated successfully", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Failed to update photo URL", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Sync failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -154,10 +154,10 @@ public class WorkerProfileActivity extends AppCompatActivity {
             FirestoreHelper.updateWorkerProfile(userId, name, phone, skills, rate, null, task -> {
                 showLoading(false);
                 if (task.isSuccessful()) {
-                    Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Worker profile saved!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(this, "Update failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Save failed", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -166,35 +166,32 @@ public class WorkerProfileActivity extends AppCompatActivity {
     private boolean validateInput(String name, String phone, String skills, String rate) {
         boolean isValid = true;
         if (name.isEmpty()) {
-            binding.nameLayout.setError("Name is required");
+            binding.nameLayout.setError("Name required");
             isValid = false;
         } else {
             binding.nameLayout.setError(null);
         }
-
         if (phone.isEmpty()) {
-            binding.phoneLayout.setError("Phone is required");
+            binding.phoneLayout.setError("Phone required");
             isValid = false;
         } else {
             binding.phoneLayout.setError(null);
         }
-
         if (skills.isEmpty()) {
-            binding.skillsLayout.setError("Skills are required");
+            binding.skillsLayout.setError("Skills required");
             isValid = false;
         } else {
             binding.skillsLayout.setError(null);
         }
-
         if (rate.isEmpty()) {
-            binding.rateLayout.setError("Hourly rate is required");
+            binding.rateLayout.setError("Rate required");
             isValid = false;
         } else {
             try {
                 Double.parseDouble(rate);
                 binding.rateLayout.setError(null);
             } catch (NumberFormatException e) {
-                binding.rateLayout.setError("Invalid rate");
+                binding.rateLayout.setError("Invalid number");
                 isValid = false;
             }
         }
@@ -204,5 +201,6 @@ public class WorkerProfileActivity extends AppCompatActivity {
     private void showLoading(boolean isLoading) {
         binding.progressOverlay.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         binding.saveButton.setEnabled(!isLoading);
+        binding.changePhotoButton.setEnabled(!isLoading);
     }
 }

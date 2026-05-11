@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.hand_man_work"
-    compileSdk = 36
+    compileSdk = 35 // Changed to 35 (Stable)
 
     defaultConfig {
         applicationId = "com.example.hand_man_work"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35 // Aligned with compileSdk
         versionCode = 1
         versionName = "1.0"
 
@@ -36,7 +36,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -46,10 +45,10 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // Import the Firebase BoM
+    // Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
 
-    // Add the dependencies for the Firebase products you want to use
+    // Firebase products (No versions needed, managed by BoM)
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
@@ -57,10 +56,9 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-messaging")
 
-    // Google Sign-In
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    // FIXED: Removed :21.2.0 to resolve "Duplicate resources"
+    implementation("com.google.android.gms:play-services-auth")
 
-    // Glide for image loading
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }
