@@ -61,8 +61,11 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging")
 
     // FIX 3: Removed ":21.2.0" to prevent duplicate resource errors.
-    // The Firebase BoM will now choose the correct compatible version automatically.
     implementation("com.google.android.gms:play-services-auth")
+
+    // FIXED: Added missing 'i' to implementation
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
