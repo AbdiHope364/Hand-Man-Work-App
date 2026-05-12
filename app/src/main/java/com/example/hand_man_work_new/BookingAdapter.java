@@ -1,5 +1,7 @@
 package com.example.hand_man_work_new;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -25,10 +27,22 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     @Override
     public void onBindViewHolder(@NonNull BookingViewHolder holder, int position) {
         Booking booking = bookingList.get(position);
+        Context context = holder.itemView.getContext();
+
         holder.binding.tvCustomerName.setText(booking.getCustomerName());
         holder.binding.tvStatus.setText("Status: " + booking.getStatus());
 
-        holder.binding.btnAccept.setOnClickListener(v -> updateStatus(booking.getBookingId(), "accepted"));
+        // ACTION: ACCEPT BOOKING AND OPEN CHAT
+        holder.binding.btnAccept.setOnClickListener(v -> {
+            // 1. Update status in database
+            updateStatus(booking.getBookingId(), "accepted");
+
+            // 2. Open Chat Activity
+            Intent intent = new Intent(context, ChatActivity.class);
+            intent.putExtra("bookingId", booking.getBookingId()); // Pass the ID
+            context.startActivity(intent);
+        });
+
         holder.binding.btnReject.setOnClickListener(v -> updateStatus(booking.getBookingId(), "rejected"));
     }
 
@@ -41,6 +55,9 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
     class BookingViewHolder extends RecyclerView.ViewHolder {
         ItemBookingBinding binding;
-        BookingViewHolder(ItemBookingBinding binding) { super(binding.getRoot()); this.binding = binding; }
+        BookingViewHolder(ItemBookingBinding binding) { 
+            super(binding.getRoot()); 
+            this.binding = binding; 
+        }
     }
 }
