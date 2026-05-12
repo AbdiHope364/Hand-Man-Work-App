@@ -1,4 +1,4 @@
-package com.example.hand_man_work;
+package com.example.hand_man_work_new;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hand_man_work.databinding.ActivityCustomerDashboardBinding;
+import com.example.hand_man_work_new.databinding.ActivityCustomerDashboardBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class CustomerDashboardActivity extends AppCompatActivity {

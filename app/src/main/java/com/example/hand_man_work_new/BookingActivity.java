@@ -1,4 +1,4 @@
-package com.example.hand_man_work;
+package com.example.hand_man_work_new;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hand_man_work.databinding.ActivityBookingBinding;
+import com.example.hand_man_work_new.databinding.ActivityBookingBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;

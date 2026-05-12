@@ -1,16 +1,12 @@
-package com.example.hand_man_work;
+package com.example.hand_man_work_new;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
-import com.example.hand_man_work.databinding.ItemWorkerBinding;
-
+import com.example.hand_man_work_new.databinding.ItemWorkerBinding;
 import java.util.List;
-import java.util.Locale;
 
 public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerViewHolder> {
 
@@ -29,8 +25,9 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
     @NonNull
     @Override
     public WorkerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // This is the method that was missing causing your error
         ItemWorkerBinding binding = ItemWorkerBinding.inflate(
-            LayoutInflater.from(parent.getContext()), parent, false);
+                LayoutInflater.from(parent.getContext()), parent, false);
         return new WorkerViewHolder(binding);
     }
 
@@ -42,7 +39,7 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
 
     @Override
     public int getItemCount() {
-        return workerList.size();
+        return workerList != null ? workerList.size() : 0;
     }
 
     static class WorkerViewHolder extends RecyclerView.ViewHolder {
@@ -55,22 +52,13 @@ public class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.WorkerView
 
         public void bind(final Worker worker, final OnWorkerClickListener listener) {
             binding.workerName.setText(worker.getName());
-            binding.workerSkills.setText("Skills: " + worker.getSkillsString());
-            binding.workerRate.setText(String.format(Locale.getDefault(), "$%.2f/hr", worker.getHourlyRate()));
-            
-            // Load worker photo using Glide
-            if (worker.getPhotoUrl() != null && !worker.getPhotoUrl().isEmpty()) {
-                Glide.with(itemView.getContext())
-                    .load(worker.getPhotoUrl())
-                    .circleCrop()
-                    .placeholder(android.R.drawable.sym_def_app_icon)
-                    .error(android.R.drawable.sym_def_app_icon)
+
+            // Load image using Glide
+            Glide.with(binding.workerImage.getContext())
+                    .load(worker.getImageUrl())
+                    .placeholder(android.R.drawable.ic_menu_gallery)
                     .into(binding.workerImage);
-            } else {
-                binding.workerImage.setImageResource(android.R.drawable.sym_def_app_icon);
-            }
-            
-            // Set click listener on the entire item
+
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onWorkerClick(worker);

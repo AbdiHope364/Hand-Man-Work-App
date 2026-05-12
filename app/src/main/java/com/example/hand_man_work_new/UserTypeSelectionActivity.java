@@ -1,4 +1,5 @@
-package com.example.hand_man_work;
+// 1. Update the package to the NEW one
+package com.example.hand_man_work_new;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +8,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hand_man_work.databinding.ActivityUserTypeSelectionBinding;
+// 2. Update the databinding import to the NEW namespace
+import com.example.hand_man_work_new.databinding.ActivityUserTypeSelectionBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -21,6 +23,7 @@ public class UserTypeSelectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // This will now find the class correctly
         binding = ActivityUserTypeSelectionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -48,12 +51,10 @@ public class UserTypeSelectionActivity extends AppCompatActivity {
         FirestoreHelper.saveUser(user, name, phone, type, task -> {
             binding.progressBar.setVisibility(View.GONE);
             if (task.isSuccessful()) {
-                // Redirect based on type
                 Intent intent;
                 if ("customer".equals(type)) {
                     intent = new Intent(this, CustomerDashboardActivity.class);
                 } else {
-                    // Using WorkerDashboardActivity as it seems to be the one used in LoginActivity
                     intent = new Intent(this, WorkerDashboardActivity.class);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

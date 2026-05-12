@@ -1,9 +1,10 @@
-package com.example.hand_man_work;
+package com.example.hand_man_work_new;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
@@ -12,24 +13,21 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.hand_man_work.databinding.ActivityWorkerProfileBinding;
+// FIXED IMPORT BELOW
+import com.example.hand_man_work_new.databinding.ActivityCustomerProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class WorkerProfileActivity extends AppCompatActivity {
+public class CustomerProfileActivity extends AppCompatActivity {
 
-    private ActivityWorkerProfileBinding binding;
+    private ActivityCustomerProfileBinding binding;
     private String userId;
     private Uri imageUri;
-    
-    // Improved Image Picker Launcher for maximum compatibility
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -43,7 +41,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityWorkerProfileBinding.inflate(getLayoutInflater());
+        binding = ActivityCustomerProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         userId = FirebaseAuth.getInstance().getUid();
@@ -52,19 +50,45 @@ public class WorkerProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Back button
         binding.backButton.setOnClickListener(v -> finish());
-        
-        // Setup interactive photo picker
-        binding.changePhotoButton.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("image/*");
-            imagePickerLauncher.launch(Intent.createChooser(intent, "Select Profile Picture"));
-        });
 
+        setupTextWatchers();
         loadUserData();
 
         binding.saveButton.setOnClickListener(v -> saveProfile());
+
+        binding.changePhotoButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            imagePickerLauncher.launch(Intent.createChooser(intent, "Select Picture"));
+        });
+    }
+
+    private void setupTextWatchers() {
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                updateProgress();
+            }
+        };
+
+        binding.nameEditText.addTextChangedListener(watcher);
+        binding.phoneEditText.addTextChangedListener(watcher);
+        binding.addressEditText.addTextChangedListener(watcher);
+    }
+
+    private void updateProgress() {
+        int progress = 0;
+        if (!binding.nameEditText.getText().toString().trim().isEmpty()) progress += 33;
+        if (!binding.phoneEditText.getText().toString().trim().isEmpty()) progress += 33;
+        if (!binding.addressEditText.getText().toString().trim().isEmpty()) progress += 34;
+
+        binding.completionProgress.setProgress(progress);
+        binding.completionText.setText("Profile Completion: " + progress + "%");
     }
 
     private void loadUserData() {
@@ -76,25 +100,18 @@ public class WorkerProfileActivity extends AppCompatActivity {
                 if (document != null && document.exists()) {
                     binding.nameEditText.setText(document.getString("name"));
                     binding.phoneEditText.setText(document.getString("phone"));
-                    
-                    Object skillsObj = document.get("skills");
-                    if (skillsObj instanceof List) {
-                        List<String> skills = (List<String>) skillsObj;
-                        binding.skillsEditText.setText(TextUtils.join(", ", skills));
-                    }
-                    
-                    Double rate = document.getDouble("hourlyRate");
-                    if (rate != null) {
-                        binding.rateEditText.setText(String.valueOf(rate));
-                    }
-                    
+                    binding.addressEditText.setText(document.getString("address"));
+                    binding.emailEditText.setText(document.getString("email"));
+
                     String photoUrl = document.getString("photoUrl");
                     if (photoUrl != null && !photoUrl.isEmpty()) {
                         Glide.with(this).load(photoUrl).circleCrop().into(binding.profileImage);
                     }
+
+                    updateProgress();
                 }
             } else {
-                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to load profile data", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -103,7 +120,6 @@ public class WorkerProfileActivity extends AppCompatActivity {
         if (imageUri == null) return;
 
         showLoading(true);
-        // Using unique path to bypass cache and ensure instant update
         StorageReference storageRef = FirebaseStorage.getInstance().getReference()
                 .child("profile_images")
                 .child(userId + "_" + System.currentTimeMillis() + ".jpg");
@@ -115,7 +131,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
                 }))
                 .addOnFailureListener(e -> {
                     showLoading(false);
-                    Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -123,13 +139,13 @@ public class WorkerProfileActivity extends AppCompatActivity {
         Map<String, Object> updates = new HashMap<>();
         updates.put("photoUrl", url);
 
-        FirestoreHelper.updateUser(userId, updates, task -> {
+        FirestoreHelper.updateCustomerProfile(userId, updates, task -> {
             showLoading(false);
             if (task.isSuccessful()) {
                 Glide.with(this).load(url).circleCrop().into(binding.profileImage);
                 Toast.makeText(this, "Photo updated successfully", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Sync failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to update photo URL in database", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -137,63 +153,49 @@ public class WorkerProfileActivity extends AppCompatActivity {
     private void saveProfile() {
         String name = binding.nameEditText.getText().toString().trim();
         String phone = binding.phoneEditText.getText().toString().trim();
-        String skillsStr = binding.skillsEditText.getText().toString().trim();
-        String rateStr = binding.rateEditText.getText().toString().trim();
+        String address = binding.addressEditText.getText().toString().trim();
 
-        if (validateInput(name, phone, skillsStr, rateStr)) {
-            List<String> skills = new ArrayList<>();
-            for (String s : skillsStr.split(",")) {
-                if (!s.trim().isEmpty()) {
-                    skills.add(s.trim());
-                }
-            }
-            
-            double rate = Double.parseDouble(rateStr);
-
+        if (validateInput(name, phone, address)) {
             showLoading(true);
-            FirestoreHelper.updateWorkerProfile(userId, name, phone, skills, rate, null, task -> {
+
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("name", name);
+            updates.put("phone", phone);
+            updates.put("address", address);
+
+            FirestoreHelper.updateCustomerProfile(userId, updates, task -> {
                 showLoading(false);
                 if (task.isSuccessful()) {
-                    Toast.makeText(this, "Worker profile saved!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(this, "Save failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Update failed", Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
-    private boolean validateInput(String name, String phone, String skills, String rate) {
+    private boolean validateInput(String name, String phone, String address) {
         boolean isValid = true;
         if (name.isEmpty()) {
-            binding.nameLayout.setError("Name required");
+            binding.nameLayout.setError("Name is required");
             isValid = false;
         } else {
             binding.nameLayout.setError(null);
         }
+
         if (phone.isEmpty()) {
-            binding.phoneLayout.setError("Phone required");
+            binding.phoneLayout.setError("Phone is required");
             isValid = false;
         } else {
             binding.phoneLayout.setError(null);
         }
-        if (skills.isEmpty()) {
-            binding.skillsLayout.setError("Skills required");
+
+        if (address.isEmpty()) {
+            binding.addressLayout.setError("Address is required");
             isValid = false;
         } else {
-            binding.skillsLayout.setError(null);
-        }
-        if (rate.isEmpty()) {
-            binding.rateLayout.setError("Rate required");
-            isValid = false;
-        } else {
-            try {
-                Double.parseDouble(rate);
-                binding.rateLayout.setError(null);
-            } catch (NumberFormatException e) {
-                binding.rateLayout.setError("Invalid number");
-                isValid = false;
-            }
+            binding.addressLayout.setError(null);
         }
         return isValid;
     }
@@ -201,6 +203,5 @@ public class WorkerProfileActivity extends AppCompatActivity {
     private void showLoading(boolean isLoading) {
         binding.progressOverlay.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         binding.saveButton.setEnabled(!isLoading);
-        binding.changePhotoButton.setEnabled(!isLoading);
     }
 }

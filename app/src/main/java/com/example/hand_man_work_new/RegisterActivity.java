@@ -1,4 +1,4 @@
-package com.example.hand_man_work;
+package com.example.hand_man_work_new;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,15 +9,18 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hand_man_work.databinding.ActivityRegisterBinding;
+// Layout Binding
+import com.example.hand_man_work_new.databinding.ActivityRegisterBinding;
+
+// Import the Helper class explicitly to resolve the "package does not exist" error
+import com.example.hand_man_work_new.GoogleSignInHelper;
+
+// Firebase & Data
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * Updated RegisterActivity to support Google Sign-In and standard registration.
- */
 public class RegisterActivity extends AppCompatActivity implements GoogleSignInHelper.GoogleSignInListener {
 
     private ActivityRegisterBinding binding;
@@ -29,6 +32,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleSignInH
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize View Binding
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -37,6 +42,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleSignInH
 
         // Initialize Google Sign-In Helper
         googleSignInHelper = new GoogleSignInHelper(this, this);
+
+        // Initialize the Launcher for Google Sign-In
         googleSignInLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -46,11 +53,15 @@ public class RegisterActivity extends AppCompatActivity implements GoogleSignInH
                 }
         );
 
-        // UI Setup
+        // UI Click Listeners
         binding.backButton.setOnClickListener(v -> finish());
         binding.loginText.setOnClickListener(v -> finish());
         binding.registerButton.setOnClickListener(v -> performRegistration());
-        binding.googleSignInButton.setOnClickListener(v -> googleSignInHelper.signIn(googleSignInLauncher));
+
+        binding.googleSignInButton.setOnClickListener(v -> {
+            showLoading(true);
+            googleSignInHelper.signIn(googleSignInLauncher);
+        });
     }
 
     private void performRegistration() {
@@ -87,51 +98,51 @@ public class RegisterActivity extends AppCompatActivity implements GoogleSignInH
         showLoading(true);
 
         mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this, task -> {
-                if (task.isSuccessful()) {
-                    // Standard registration successful, move to role selection
-                    Intent i = new Intent(this, UserTypeSelectionActivity.class);
-                    i.putExtra("name", name);
-                    i.putExtra("phone", phone);
-                    startActivity(i);
-                    finish();
-                } else {
-                    showLoading(false);
-                    String error = task.getException() != null ? task.getException().getMessage() : "Registration failed";
-                    Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-                }
-            });
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Intent i = new Intent(this, UserTypeSelectionActivity.class);
+                        i.putExtra("name", name);
+                        i.putExtra("phone", phone);
+                        startActivity(i);
+                        finish();
+                    } else {
+                        showLoading(false);
+                        String error = task.getException() != null ? task.getException().getMessage() : "Registration failed";
+                        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     @Override
     public void onGoogleSignInSuccess(FirebaseUser user) {
         if (user == null) return;
-        
-        // Check if user already exists in Firestore
+
         db.collection("users").document(user.getUid()).get()
-            .addOnCompleteListener(task -> {
-                showLoading(false);
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null && document.exists()) {
-                        // User exists, redirect to home
-                        String type = document.getString("type");
-                        Intent intent = new Intent(this, "worker".equals(type) ? WorkerDashboardActivity.class : CustomerHomeActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+                .addOnCompleteListener(task -> {
+                    showLoading(false);
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null && document.exists()) {
+                            String type = document.getString("type");
+                            // Determine which dashboard to open
+                            Class<?> targetActivity = "worker".equals(type) ? WorkerDashboardActivity.class : CustomerHomeActivity.class;
+                            Intent intent = new Intent(this, targetActivity);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            // New user via Google, send to role selection
+                            Intent intent = new Intent(this, UserTypeSelectionActivity.class);
+                            intent.putExtra("name", user.getDisplayName());
+                            startActivity(intent);
+                            finish();
+                        }
                     } else {
-                        // New Google user, send to role selection
-                        Intent intent = new Intent(this, UserTypeSelectionActivity.class);
-                        // Google account usually provides name
-                        intent.putExtra("name", user.getDisplayName());
-                        startActivity(intent);
-                        finish();
+                        String error = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                        Toast.makeText(this, "Firestore Error: " + error, Toast.LENGTH_LONG).show();
+                        android.util.Log.e("FIRESTORE_ERROR", "Error details: ", task.getException());
                     }
-                } else {
-                    Toast.makeText(this, "Database error", Toast.LENGTH_SHORT).show();
-                }
-            });
+                });
     }
 
     @Override
@@ -142,7 +153,9 @@ public class RegisterActivity extends AppCompatActivity implements GoogleSignInH
 
     @Override
     public void showLoading(boolean isLoading) {
-        binding.progressOverlay.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        if (binding.progressOverlay != null) {
+            binding.progressOverlay.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        }
         binding.registerButton.setEnabled(!isLoading);
         binding.googleSignInButton.setEnabled(!isLoading);
     }

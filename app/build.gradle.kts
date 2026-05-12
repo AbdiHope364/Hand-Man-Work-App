@@ -4,21 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.example.hand_man_work"
-
-    // FIX 1: Updated to 36 to satisfy AAR metadata requirements
-    compileSdk = 36
+    namespace = "com.example.hand_man_work_new"
+    compileSdk = 36 // Updated to 36 as required by your libraries
 
     defaultConfig {
-        applicationId = "com.example.hand_man_work"
+        applicationId = "com.example.hand_man_work_new"
         minSdk = 24
-
-        // FIX 2: Updated to 36 to match compileSdk
         targetSdk = 36
-
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -43,16 +37,15 @@ android {
 }
 
 dependencies {
+    // Core AndroidX
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation("androidx.core:core-splashscreen:1.0.1")
-
+    implementation("androidx.work:work-runtime:2.9.0")
     // Firebase BoM (Bill of Materials)
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
-
-    // Firebase products (Managed by BoM)
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
@@ -60,13 +53,17 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-messaging")
 
-    // FIX 3: Removed ":21.2.0" to prevent duplicate resource errors.
-    implementation("com.google.android.gms:play-services-auth")
+    // Google Services & Identity
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.googleid)
 
-    // FIXED: Added missing 'i' to implementation
+    // Image Loading
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

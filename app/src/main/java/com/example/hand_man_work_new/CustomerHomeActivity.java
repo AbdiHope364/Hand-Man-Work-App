@@ -1,4 +1,4 @@
-package com.example.hand_man_work;
+package com.example.hand_man_work_new;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.hand_man_work.databinding.ActivityCustomerHomeBinding;
+// FIXED IMPORT BELOW
+import com.example.hand_man_work_new.databinding.ActivityCustomerHomeBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -24,18 +25,18 @@ public class CustomerHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // This will now resolve correctly
         binding = ActivityCustomerHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Change back button to navigate to Customer Profile Activity
         binding.backButton.setOnClickListener(v -> {
             Intent intent = new Intent(CustomerHomeActivity.this, CustomerProfileActivity.class);
             startActivity(intent);
         });
 
-        // Initialize
         workerList = new ArrayList<>();
-        
+
         adapter = new WorkerAdapter(workerList, worker -> {
             Intent intent = new Intent(CustomerHomeActivity.this, BookingActivity.class);
             intent.putExtra("workerId", worker.getUid());
@@ -54,29 +55,29 @@ public class CustomerHomeActivity extends AppCompatActivity {
         binding.emptyStateText.setVisibility(View.GONE);
 
         FirebaseFirestore.getInstance()
-            .collection("users")
-            .whereEqualTo("type", "worker")
-            .get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
-                binding.progressBar.setVisibility(View.GONE);
-                workerList.clear();
-                
-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    Worker worker = document.toObject(Worker.class);
-                    worker.setUid(document.getId());
-                    workerList.add(worker);
-                }
-                
-                adapter.notifyDataSetChanged();
-                
-                if (workerList.isEmpty()) {
+                .collection("users")
+                .whereEqualTo("type", "worker")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    binding.progressBar.setVisibility(View.GONE);
+                    workerList.clear();
+
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Worker worker = document.toObject(Worker.class);
+                        worker.setUid(document.getId());
+                        workerList.add(worker);
+                    }
+
+                    adapter.notifyDataSetChanged();
+
+                    if (workerList.isEmpty()) {
+                        binding.emptyStateText.setVisibility(View.VISIBLE);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    binding.progressBar.setVisibility(View.GONE);
                     binding.emptyStateText.setVisibility(View.VISIBLE);
-                }
-            })
-            .addOnFailureListener(e -> {
-                binding.progressBar.setVisibility(View.GONE);
-                binding.emptyStateText.setVisibility(View.VISIBLE);
-                binding.emptyStateText.setText("Error: " + e.getMessage());
-            });
+                    binding.emptyStateText.setText("Error: " + e.getMessage());
+                });
     }
 }

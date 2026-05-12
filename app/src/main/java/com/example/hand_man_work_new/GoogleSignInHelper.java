@@ -1,6 +1,7 @@
-package com.example.hand_man_work;
+package com.example.hand_man_work_new;
 
 import android.app.Activity;
+import com.example.hand_man_work_new.R;
 import android.content.Intent;
 import android.widget.Toast;
 

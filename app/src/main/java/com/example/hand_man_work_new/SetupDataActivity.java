@@ -1,4 +1,4 @@
-package com.example.hand_man_work;
+package com.example.hand_man_work_new;
 
 import android.os.Bundle;
 import android.widget.Toast;
