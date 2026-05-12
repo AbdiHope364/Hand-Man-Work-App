@@ -4,20 +4,28 @@ public class Booking {
     private String bookingId;
     private String customerId;
     private String workerId;
-    private String status; // pending, accepted, completed, cancelled
+    private String customerName;
+    private String status; // pending, accepted, rejected, completed
     private long timestamp;
 
     public Booking() {} // Required for Firestore
 
-    public Booking(String customerId, String workerId) {
+    public Booking(String bookingId, String customerId, String customerName, String workerId) {
+        this.bookingId = bookingId;
         this.customerId = customerId;
+        this.customerName = customerName;
         this.workerId = workerId;
         this.status = "pending";
         this.timestamp = System.currentTimeMillis();
     }
 
-    // Add Getters and Setters here
+    // Getters and Setters
+    public String getBookingId() { return bookingId; }
+    public void setBookingId(String bookingId) { this.bookingId = bookingId; }
+    public String getCustomerId() { return customerId; }
+    public String getCustomerName() { return customerName; }
+    public String getWorkerId() { return workerId; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
-    public String getWorkerId() { return workerId; }
+    public long getTimestamp() { return timestamp; }
 }
