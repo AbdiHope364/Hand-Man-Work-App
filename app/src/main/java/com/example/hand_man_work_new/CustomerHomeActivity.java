@@ -50,7 +50,7 @@ public class CustomerHomeActivity extends AppCompatActivity {
     }
 
     private void loadWorkers(String category) {
-        Query query = db.collection("users").whereEqualTo("userType", "worker");
+        Query query = db.collection("users").whereEqualTo("userType", "worker").whereEqualTo("isVerified", true);
         if (category != null) query = query.whereEqualTo("category", category);
 
         query.addSnapshotListener((value, error) -> {
