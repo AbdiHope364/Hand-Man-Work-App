@@ -76,6 +76,8 @@
         <activity 
             android:name=".EditProfileActivity" 
             android:exported="false" />
+        <activity android:name=".CustomerHomeActivity" android:exported="false" />
+        <activity android:name=".ReviewActivity" android:exported="false" />
     </application>
 
 </manifest>

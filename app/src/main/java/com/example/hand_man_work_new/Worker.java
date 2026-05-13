@@ -8,21 +8,29 @@ public class Worker {
     private String imageUrl;
     private String bio;
     private List<String> skills;
+    private String category; // Plumbing, Electrical, etc.
+    private String address;
+    private double rating;
+    private int reviewCount;
 
     public Worker() {} 
 
-    public Worker(String uid, String name, String imageUrl, String bio, List<String> skills) {
+    public Worker(String uid, String name, String imageUrl, String category, String address) {
         this.uid = uid;
         this.name = name;
         this.imageUrl = imageUrl;
-        this.bio = bio;
-        this.skills = skills;
+        this.category = category;
+        this.address = address;
+        this.rating = 0.0;
+        this.reviewCount = 0;
     }
 
+    // Getters and Setters
     public String getUid() { return uid; }
-    public void setUid(String uid) { this.uid = uid; }
     public String getName() { return name; }
     public String getImageUrl() { return imageUrl; }
-    public String getBio() { return bio; }
-    public List<String> getSkills() { return skills; }
+    public String getCategory() { return category; }
+    public String getAddress() { return address; }
+    public double getRating() { return rating; }
+    public int getReviewCount() { return reviewCount; }
 }

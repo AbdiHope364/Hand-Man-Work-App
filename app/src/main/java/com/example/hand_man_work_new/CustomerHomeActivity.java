@@ -1,83 +1,75 @@
 package com.example.hand_man_work_new;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-// FIXED IMPORT BELOW
 import com.example.hand_man_work_new.databinding.ActivityCustomerHomeBinding;
+import com.google.android.material.chip.Chip;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
+import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerHomeActivity extends AppCompatActivity {
-
     private ActivityCustomerHomeBinding binding;
     private WorkerAdapter adapter;
-    private List<Worker> workerList;
+    private List<Worker> workerList = new ArrayList<>();
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // This will now resolve correctly
         binding = ActivityCustomerHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(CustomerHomeActivity.this, CustomerProfileActivity.class);
-            startActivity(intent);
+        db = FirebaseFirestore.getInstance();
+        setupRecyclerView();
+        loadWorkers(null); // Load all initially
+
+        binding.categoryFilterGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            Chip chip = findViewById(checkedId);
+            if (chip != null) {
+                String category = chip.getText().toString();
+                loadWorkers(category.equals("All") ? null : category);
+            }
         });
 
-        workerList = new ArrayList<>();
-
-        adapter = new WorkerAdapter(workerList, worker -> {
-            Intent intent = new Intent(CustomerHomeActivity.this, BookingActivity.class);
-            intent.putExtra("workerId", worker.getUid());
-            intent.putExtra("workerName", worker.getName());
-            startActivity(intent);
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) { filterByName(query); return true; }
+            @Override
+            public boolean onQueryTextChange(String newText) { filterByName(newText); return true; }
         });
-
-        binding.workerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.workerRecyclerView.setAdapter(adapter);
-
-        loadWorkers();
     }
 
-    private void loadWorkers() {
-        binding.progressBar.setVisibility(View.VISIBLE);
-        binding.emptyStateText.setVisibility(View.GONE);
+    private void setupRecyclerView() {
+        adapter = new WorkerAdapter(workerList);
+        binding.rvWorkers.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvWorkers.setAdapter(adapter);
+    }
 
-        FirebaseFirestore.getInstance()
-                .collection("users")
-                .whereEqualTo("type", "worker")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    binding.progressBar.setVisibility(View.GONE);
-                    workerList.clear();
+    private void loadWorkers(String category) {
+        Query query = db.collection("users").whereEqualTo("userType", "worker");
+        if (category != null) query = query.whereEqualTo("category", category);
 
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        Worker worker = document.toObject(Worker.class);
-                        worker.setUid(document.getId());
-                        workerList.add(worker);
-                    }
+        query.addSnapshotListener((value, error) -> {
+            if (value != null) {
+                workerList.clear();
+                workerList.addAll(value.toObjects(Worker.class));
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
 
-                    adapter.notifyDataSetChanged();
-
-                    if (workerList.isEmpty()) {
-                        binding.emptyStateText.setVisibility(View.VISIBLE);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.emptyStateText.setVisibility(View.VISIBLE);
-                    binding.emptyStateText.setText("Error: " + e.getMessage());
-                });
+    private void filterByName(String text) {
+        List<Worker> filteredList = new ArrayList<>();
+        for (Worker w : workerList) {
+            if (w.getName().toLowerCase().contains(text.toLowerCase()) || 
+                w.getAddress().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(w);
+            }
+        }
+        adapter.updateList(filteredList);
     }
 }
